@@ -85,7 +85,7 @@ Variables and functions available to alert templates:
 * Touched: time this alert was last updated
 * Group: dictionary of tags for this alert (i.e., host=ny-redis01, db=42)
 * Subject: string of template subject
-* History: array of Events. An Event has a Status field (an integer: 3 = crit, 2 = warn, 1 = norm) with a textual string representation; and a Time field. Most recent last.
+* History: array of Events. An Event has a `Status` field (an integer) with a textual string representation; and a `Time` field. Most recent last. The status fields have identification methods: `IsNormal()`, `IsWarning()`, `IsCritical()`, `IsUnknown()`.
 * Last: last Event of History array
 * Alert: dictionary of rule data (but the first letter of each is uppercase)
   * Name
