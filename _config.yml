@@ -1,0 +1,9 @@
+markdown:         redcarpet
+highlighter:      pygments
+permalink:        pretty
+
+version: 0.0.1
+title:            bosun
+tagline:          'time series alerting framework'
+description:      'A time-series alerting framework backed by <a href="http://opentsdb.net/">OpenTSDB 2.0</a>.'
+repo:           https://github.com/StackExchange/bosun
