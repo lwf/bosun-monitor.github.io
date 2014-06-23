@@ -4,12 +4,27 @@
   {% include head.html %}
 
   <body>
+    <header class="app-bar promote-layer">
+      <div class="app-bar-container">
+        <button class="menu"><img src="images/hamburger.svg" alt="menu"></button>
+        <h1 class="logo">{{site.title}}</h1>
+        <section class="app-bar-actions">
+        <!-- Put App Bar Buttons Here -->
+        </section>
+      </div>
+    </header>
 
-    {% include sidebar.html %}
+    <nav class="navdrawer-container promote-layer">
+      <h4>Navigation</h4>
+      {% include sidebar.html %}
+    </nav>
 
-    <div class="content container">
-      {{ content }}
-    </div>
+    <main>
+        {{ content }}
+    </main>
 
+    <!-- build:js scripts/main.min.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
   </body>
 </html>
