@@ -58,6 +58,6 @@ The rule page is where you do the bulk of the work. It allows you to start using
 
 For example, we can use variable interpolation, and set different thresholds and timespans for critical and warning:
 
-![](https://github.com/StackExchange/bosun_images/raw/master/changed_rule.jpg)
+![]({{site.github.url}}/assets/walkthrough/changed_rule.jpg)
 
 You can also edit the notification template to look like whatever you want. At the bottom of the page are all the variables that can be included. You can even have queries evaluated that were not even used in the alert.
