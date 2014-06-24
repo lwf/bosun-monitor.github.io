@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Sending Data
+title: Send Data
 order: 5
 ---
 
