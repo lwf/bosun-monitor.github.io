@@ -28,6 +28,13 @@ Get all the available tagvs for the specified tagk
 
 Get all the available tagvs for the specific tagk and metric combination. You can optionally add a query string of tagk=tagv pairs to filter it even more. For example: `/api/tagv/iface/os.net.bytes?host=server01&direction=in`
 
+### /api/metadata/get
+
+Get latest values of all metadata. Optional parameters:
+
+* **metric**: filter by metric name. Ex: `/api/metadata/get?metric=os.cpu`.
+* **tagk** and **tagv** pairs: filter by tag values; must be correctly paired; many supported. Ex: `/api/metadata/get?tagk=key1&tagv=val1&tagk=key2&tagv=val2`.
+
 ## Passthrough Endpoints
 By default, TSAF also listen on `:4242` and passes all HTTP API requests through to OpenTSDB. So if you are you are looking to send data to tsaf or query it using opentsdb's query format, then look at the [OpenTSDB Documentation on its API Endpoints](http://opentsdb.net/docs/build/html/api_http/index.html#api-endpoints).
 
