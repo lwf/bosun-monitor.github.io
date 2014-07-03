@@ -36,7 +36,6 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * relayListen: OpenTSDB relay listen address, defaults to `:4242`
 * webDir: directory with template and static assets, defaults to `web`
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
-* unknown: time at which to mark an alert unknown if it cannot be evaluated
 * unknownTemplate: name of the template for unknown alerts
 
 ### macro
@@ -160,7 +159,7 @@ An alert is an evaluated expression which can trigger actions like emailing or l
 * squelch: comma-separated list of `tagk=tagv` pairs. `tagv` is a regex. If the current tag group matches all values, the alert is squelched, and will not trigger as crit or warn. For example, `squelch = host=ny-web.*,tier=prod` will match any group that has at least that host and tier. Note that the group may have other tags assigned to it, but since all elements of the squelch list were met, it is considered a match.
 * critNotification: comma-separated list of notifications to trigger on critical. Notifications are independent of each other and executed in parallel (if there are many notifications listed, one will not block another).
 * warnNotification: comma-separated list of notifications to trigger on warning.
-* unknown: time at which to mark an alert unknown if it cannot be evaluated; overrides global setting
+* unknown: time at which to mark an alert unknown if it cannot be evaluated; defaults to global checkFrequency
 
 ### notification
 
