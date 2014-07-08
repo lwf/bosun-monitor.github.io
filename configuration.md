@@ -37,6 +37,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * webDir: directory with template and static assets, defaults to `web`
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
 * unknownTemplate: name of the template for unknown alerts
+* squelch: see [alert squelch](#squelch)
 
 ### macro
 
@@ -156,7 +157,7 @@ An alert is an evaluated expression which can trigger actions like emailing or l
 * template: name of template
 * crit: expression of a critical alert (which will send an email)
 * warn: expression of a warning alert (viewable on the web interface)
-* squelch: comma-separated list of `tagk=tagv` pairs. `tagv` is a regex. If the current tag group matches all values, the alert is squelched, and will not trigger as crit or warn. For example, `squelch = host=ny-web.*,tier=prod` will match any group that has at least that host and tier. Note that the group may have other tags assigned to it, but since all elements of the squelch list were met, it is considered a match.
+* <a name="squelch"></a>squelch: comma-separated list of `tagk=tagv` pairs. `tagv` is a regex. If the current tag group matches all values, the alert is squelched, and will not trigger as crit or warn. For example, `squelch = host=ny-web.*,tier=prod` will match any group that has at least that host and tier. Note that the group may have other tags assigned to it, but since all elements of the squelch list were met, it is considered a match. Multiple squelch lines may appear; a tag group matches if any of the squelch lines match.
 * critNotification: comma-separated list of notifications to trigger on critical. Notifications are independent of each other and executed in parallel (if there are many notifications listed, one will not block another).
 * warnNotification: comma-separated list of notifications to trigger on warning.
 * unknown: time at which to mark an alert unknown if it cannot be evaluated; defaults to global checkFrequency
