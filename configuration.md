@@ -253,6 +253,14 @@ Average.
 
 Sum.
 
+#### min(series)
+
+Returns the minimum value of the series, same as calling percentile(series, 0).
+
+#### max(series)
+
+Returns the maximum value of the series, same as calling percentile(series, 1).
+
 #### percentile(series, p)
 
 Returns the value from the series at the percentile p. Min and Max can be simulated using `p <= 0` and `p >= 1`, respectively.
