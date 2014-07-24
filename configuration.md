@@ -162,6 +162,7 @@ An alert is an evaluated expression which can trigger actions like emailing or l
 * critNotification: comma-separated list of notifications to trigger on critical. Notifications are independent of each other and executed in parallel (if there are many notifications listed, one will not block another).
 * warnNotification: comma-separated list of notifications to trigger on warning.
 * unknown: time at which to mark an alert unknown if it cannot be evaluated; defaults to global checkFrequency
+* unjoinedOk: if present, will ignore unjoined expression errors.
 
 ### notification
 
