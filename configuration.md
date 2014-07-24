@@ -38,6 +38,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
 * unknownTemplate: name of the template for unknown alerts
 * squelch: see [alert squelch](#squelch)
+* ping: if present, will ping all values tagged with host
 
 ### macro
 
