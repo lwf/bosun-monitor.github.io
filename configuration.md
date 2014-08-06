@@ -29,7 +29,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 #### Optional
 
 * checkFrequency: time between alert checks, defaults to `5m`
-* stateFile: TSAF state file, defaults to `tsaf.state`
+* stateFile: bosun state file, defaults to `bosun.state`
 * smtpHost: SMTP server, required for email notifications
 * emailFrom: from address for notification emails, required for email notifications
 * httpListen: HTTP listen address, defaults to `:8070`
@@ -217,7 +217,7 @@ Query functions take a query string (like `sum:os.cpu{host=*}`) and return a ser
 
 #### q(query, startDuration, endDuration)
 
-Generic query from endDuration to startDuration ago. If endDuration is the empty string (`""`), now is used. Support duration units are listed in [the docs](http://opentsdb.net/docs/build/html/user_guide/query/dates.html). Refer to [the docs](http://opentsdb.net/docs/build/html/user_guide/query/index.html) for query syntax. The query argument is the value part of the `m=...` expressions. `*` and `|` are fully supported. In addition, queries like `sys.cpu.user{host=ny-*}` are supported. These are performed by an additional step which determines valid matches, and replaces `ny-*` with `ny-web01|ny-web02|...|ny-web10` to achieve the same result. This lookup is kept in memory by the system and does not incur any additional OpenTSDB API requests, but does require tcollector instances pointed to the TSAF server.
+Generic query from endDuration to startDuration ago. If endDuration is the empty string (`""`), now is used. Support duration units are listed in [the docs](http://opentsdb.net/docs/build/html/user_guide/query/dates.html). Refer to [the docs](http://opentsdb.net/docs/build/html/user_guide/query/index.html) for query syntax. The query argument is the value part of the `m=...` expressions. `*` and `|` are fully supported. In addition, queries like `sys.cpu.user{host=ny-*}` are supported. These are performed by an additional step which determines valid matches, and replaces `ny-*` with `ny-web01|ny-web02|...|ny-web10` to achieve the same result. This lookup is kept in memory by the system and does not incur any additional OpenTSDB API requests, but does require tcollector instances pointed to the bosun server.
 
 #### band(query, duration, period, num)
 
@@ -231,7 +231,7 @@ For example, assume you have a metric `net.bytes` that records the number of byt
 
 `change("avg:rate:net.bytes", "60m", "")`
 
-Note that this is implemented using the TSAF's `avg` function. The following is exactly the same as the above example:
+Note that this is implemented using the bosun's `avg` function. The following is exactly the same as the above example:
 
 `avg(q("avg:rate:net.bytes", "60m", "")) * 60 * 60`
 
