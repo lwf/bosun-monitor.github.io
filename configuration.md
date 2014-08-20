@@ -196,6 +196,56 @@ notification email {
 }
 ```
 
+### lookup
+
+Lookups are used when different values are needed based on the group. For example, an alert for high CPU use may have a general setting, but need to be higher for known high-CPU machines. Lookups have subsections for lookup entries. Each entry subsection is named with an OpenTSDB tag group, and supports globbing. Entry subsections have arbitrary key/value pairs.
+
+The `lookup` function can be used in expressions to query lookup data. It takes two arguments: the name of the lookup table and the key to be extracted. When the function is executed, all possible combinations of tags are fetched from the search service, matched to the correct rule, and returned. The first successful match is used. Unmatched groups are ignored.
+
+For example, to filter based on host:
+
+```
+lookup cpu {
+	entry host=web-* {
+		high = 0.5
+	}
+	entry host=sql-* {
+		high = 0.8
+	}
+	entry host=* {
+		high = 0.3
+	}
+}
+
+alert cpu {
+	crit = avg(q("avg:rate:os.cpu{host=*}", "5m", "")) > lookup("cpu", "high")
+}
+```
+
+Multiple groups are supported and separated by commas. For example:
+
+```
+lookup cpu {
+	entry host=web-*,dc=eu {
+		high = 0.5
+	}
+	entry host=sql-*,dc=us {
+		high = 0.8
+	}
+	entry host=*,dc=us {
+		high = 0.3
+	}
+	entry host=*,dc=* {
+		high = 0.4
+	}
+}
+
+alert cpu {
+	crit = avg(q("avg:rate:os.cpu{host=*,dc=*}", "5m", "")) > lookup("cpu", "high")
+}
+```
+
+
 # <a name="expressions"></a>Expressions
 
 ## Groups
