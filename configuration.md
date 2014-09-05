@@ -10,11 +10,11 @@ Syntax is sectional, with each section having a type and a name, followed by `{`
 
 ## Variables
 
-Variables perform simple text replacement - they are not intelligent. They are any key whose name begins with `$`. Before an expression is evaluated, all variables are evaluated in the text. Variables can be defined at any scope, and will shadow other variables with the same name of higher scope.
+Variables perform simple text replacement - they are not intelligent. They are any key whose name begins with `$`, and may also be surrounded by braces (`{`, `}`) to disambiguate between shorter keys (ex: `${var}`) Before an expression is evaluated, all variables are evaluated in the text. Variables can be defined at any scope, and will shadow other variables with the same name of higher scope.
 
 ### Environment Variables
 
-Environment variables may be used similarly to variables, but with `{` and `}` surrounding the name. For example: `tsdbHost = ${TSDBHOST}`. It is an error to specify a non-existent or empty environment variable.
+Environment variables may be used similarly to variables, but with `env.` preceeding the name. For example: `tsdbHost = ${env.TSDBHOST}` (with or without braces). It is an error to specify a non-existent or empty environment variable.
 
 ## Sections
 
