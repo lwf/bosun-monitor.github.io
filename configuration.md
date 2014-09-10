@@ -170,6 +170,7 @@ A notification is a chained action to perform. The chaining continues until the 
 
 * next: name of next notification to execute after timeout. Can be itself.
 * timeout: duration to wait until next is executed. If not specified, will happen immediately.
+* body: overrides the default POST body. The alert subject is passed as the templates `.` variable. The `V` function is available as in other templates. Additionally, a `json` function will output JSON-encoded data.
 
 #### actions
 
@@ -193,6 +194,11 @@ notification email {
 	email = sysadmins@stackoverflow.com, nick@stackoverflow.com
 	next = email
 	timeout = 1d
+}
+
+# post to a slack.com chatroom {
+	post = https://company.slack.com/services/hooks/incoming-webhook?token=TOKEN
+	body = payload={"username": "bosun", "text": {{.|json}}, "icon_url": "http://stackexchange.github.io/bosun/images/tsaf-logo-mark.png"} 
 }
 ```
 
