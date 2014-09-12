@@ -295,6 +295,10 @@ Note that this is implemented using the bosun's `avg` function. The following is
 
 Diff returns the last point of the series minus the first point.
 
+#### count(query, startDuration, endDuration)
+
+Count returns the number of groups in the query as an ungrouped scalar.
+
 ### Reduction Functions
 
 All reduction functions take a series and return a number.
