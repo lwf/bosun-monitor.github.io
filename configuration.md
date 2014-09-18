@@ -95,6 +95,7 @@ Variables and functions available to alert templates:
   * Vars: alert variables, prefixed without the `$`. For example: `{{.Alert.Vars.q}}` to print `$q`.
 * E(string): executes the given expression and returns the first result with identical tags, or `nil` tags if none exists, otherwise `nil`.
 * Ack: URL for alert acknowledgement
+* Graph(string): returns an SVG graph of the expression
 
 Global template functions:
 
