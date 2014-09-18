@@ -320,6 +320,10 @@ Sum.
 
 Returns the minimum value of the series, same as calling percentile(series, 0).
 
+#### median(series)
+
+Returns the median value of the series, same as calling percentile(series, .5).
+
 #### max(series)
 
 Returns the maximum value of the series, same as calling percentile(series, 1).
