@@ -160,14 +160,47 @@ An alert is an evaluated expression which can trigger actions like emailing or l
 * crit: expression of a critical alert (which will send an email)
 * warn: expression of a warning alert (viewable on the web interface)
 * <a name="squelch"></a>squelch: comma-separated list of `tagk=tagv` pairs. `tagv` is a regex. If the current tag group matches all values, the alert is squelched, and will not trigger as crit or warn. For example, `squelch = host=ny-web.*,tier=prod` will match any group that has at least that host and tier. Note that the group may have other tags assigned to it, but since all elements of the squelch list were met, it is considered a match. Multiple squelch lines may appear; a tag group matches if any of the squelch lines match.
-* critNotification: comma-separated list of notifications to trigger on critical. Notifications are independent of each other and executed in parallel (if there are many notifications listed, one will not block another).
-* warnNotification: comma-separated list of notifications to trigger on warning.
+* critNotification: comma-separated list of notifications to trigger on critical. This line may appear multiple times and duplicate notifications, which will be merged so only one of each notification is triggered. Lookup tables may be used when `lookup("table", "key")` is an entire `critNotification` value. See example below.
+* warnNotification: identical to critNotification, but for warnings
 * unknown: time at which to mark an alert unknown if it cannot be evaluated; defaults to global checkFrequency
 * unjoinedOk: if present, will ignore unjoined expression errors.
 
+Example of notification lookups:
+
+```
+notification all {
+	#...
+}
+
+notification n {
+	#...
+}
+
+notification d {
+	#...
+}
+
+lookup l {
+	entry host=a {
+		v = n
+	entry host=b* {
+		v = d
+	}
+}
+
+alert a {
+	crit = 1
+	critNotification = all # All alerts have the all notification.
+	# Other alerts are passed through the l lookup table and may add n or d.
+	# If the host tag does not match a or b*, no other notification is added.
+	critNotification = lookup("l", "v")
+}
+```
+
+
 ### notification
 
-A notification is a chained action to perform. The chaining continues until the chain ends or the alert is acknowledged. At least one action must be specified. `next` and `timeout` are optional.
+A notification is a chained action to perform. The chaining continues until the chain ends or the alert is acknowledged. At least one action must be specified. `next` and `timeout` are optional. Notifications are independent of each other and executed in concurrently (if there are many notifications for an alert, one will not block another).
 
 * next: name of next notification to execute after timeout. Can be itself.
 * timeout: duration to wait until next is executed. If not specified, will happen immediately.
