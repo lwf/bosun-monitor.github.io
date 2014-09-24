@@ -93,9 +93,11 @@ Variables and functions available to alert templates:
   * Crit
   * Warn
   * Vars: alert variables, prefixed without the `$`. For example: `{{.Alert.Vars.q}}` to print `$q`.
-* E(string): executes the given expression and returns the first result with identical tags, or `nil` tags if none exists, otherwise `nil`.
+* Eval(string): executes the given expression and returns the first result with identical tags, or `nil` tags if none exists, otherwise `nil`.
+* EvalAll(string): executes the given expression and returns all results.
 * Ack: URL for alert acknowledgement
-* Graph(string): returns an SVG graph of the expression
+* Graph(string): returns an SVG graph of the expression with identical tags
+* GraphAll(string): returns an SVG graph of the expression
 
 Global template functions:
 
