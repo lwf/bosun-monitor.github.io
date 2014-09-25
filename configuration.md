@@ -98,6 +98,7 @@ Variables and functions available to alert templates:
 * Ack: URL for alert acknowledgement
 * Graph(string): returns an SVG graph of the expression with identical tags
 * GraphAll(string): returns an SVG graph of the expression
+* Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
 
 Global template functions:
 
