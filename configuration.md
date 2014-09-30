@@ -99,6 +99,7 @@ Variables and functions available to alert templates:
 * Graph(string): returns an SVG graph of the expression with identical tags
 * GraphAll(string): returns an SVG graph of the expression
 * Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
+* IsEmail: true if template is being rendered for an email. Needed because email clients often modify HTML.
 
 Global template functions:
 
