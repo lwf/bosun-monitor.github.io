@@ -86,7 +86,7 @@ Variables and functions available to alert templates:
 * Touched: time this alert was last updated
 * Group: dictionary of tags for this alert (i.e., host=ny-redis01, db=42)
 * Subject: string of template subject
-* History: array of Events. An Event has a `Status` field (an integer) with a textual string representation; and a `Time` field. Most recent last. The status fields have identification methods: `IsNormal()`, `IsWarning()`, `IsCritical()`, `IsUnknown()`.
+* History: array of Events. An Event has a `Status` field (an integer) with a textual string representation; and a `Time` field. Most recent last. The status fields have identification methods: `IsNormal()`, `IsWarning()`, `IsCritical()`, `IsUnknown()`, `IsError()`.
 * Last: last Event of History array
 * Alert: dictionary of rule data (but the first letter of each is uppercase)
   * Name
@@ -100,6 +100,7 @@ Variables and functions available to alert templates:
 * Graph(string): returns an SVG graph of the expression with identical tags
 * GraphAll(string): returns an SVG graph of the expression
 * Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
+* IsEmail: true if template is being rendered for an email. Needed because email clients often modify HTML.
 
 Global template functions:
 
