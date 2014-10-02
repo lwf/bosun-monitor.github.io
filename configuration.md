@@ -95,6 +95,7 @@ Variables and functions available to alert templates:
   * Vars: alert variables, prefixed without the `$`. For example: `{{.Alert.Vars.q}}` to print `$q`.
 * Eval(string): executes the given expression and returns the first result with identical tags, or `nil` tags if none exists, otherwise `nil`.
 * EvalAll(string): executes the given expression and returns all results.
+* LeftJoin(...string): Takes 2 or more expressions, evaluates them all in global context, and performs a left outer join any results that are a subset of the first argument..
 * Ack: URL for alert acknowledgement
 * Graph(string): returns an SVG graph of the expression with identical tags
 * GraphAll(string): returns an SVG graph of the expression
