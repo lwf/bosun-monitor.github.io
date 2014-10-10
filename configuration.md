@@ -395,10 +395,6 @@ Sum.
 
 Group functions modify the OpenTSDB groups.
 
-#### regroup(series or number, group)
-
-Modifies the series or number to only contain groups in the comma-separated list in group. For example, `regroup(q("avg:os.cpu{host=*,core=*,slot=*}", "5m", ""), "host,core")` will remove the slot group, as it is not present in the second argument.
-
 #### t(number, group)
 
 Transposes N series of length 1 to 1 series of length N. If the group parameter is not the empty string, the number of series returned is equal to the number of tagks passed. This is useful for performing scalar aggregation across multiple results from a query. For example, to get the total memory used on the web tier: `sum(t(avg(q("avg:os.mem.used{host=*-web*}", "5m", "")), ""))`.
