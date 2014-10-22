@@ -143,20 +143,20 @@ Click the Test button towards the right side of the page, below the Template box
 		subject = {{.Last.Status}}: {{.Alert.Name}} on {{.Group.host}}
 		body = `<p>Alert: {{.Alert.Name}} triggered on {{.Group.host}}
 		<hr>
-			<p><strong>Computation</strong>
-			<table>
-		{{range .Computations}}
-			<tr><td><a href="{{$.Expr .Text}}">{{.Text}}</a></td><td>{{.Value}}</td></tr>
-		{{end}}
-			</table>
-			<hr>
-			{{ .Graph .Alert.Vars.metric }}
-			<hr>
+		<p><strong>Computation</strong>
+		<table>
+			{{range .Computations}}
+				<tr><td><a href="{{$.Expr .Text}}">{{.Text}}</a></td><td>{{.Value}}</td></tr>
+			{{end}}
+		</table>
+		<hr>
+		{{ .Graph .Alert.Vars.metric }}
+		<hr>
 		<p><strong>Relevant Tags</strong>
 		<table>
-				{{range $k, $v := .Group}}
-						<tr><td>{{$k}}</td><td>{{$v}}</td></tr>
-				{{end}}
+			{{range $k, $v := .Group}}
+				<tr><td>{{$k}}</td><td>{{$v}}</td></tr>
+			{{end}}
 		</table>`
 	}
 
