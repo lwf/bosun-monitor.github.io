@@ -1,30 +1,63 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<html lang="en">
+	<head>
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% include head.html %}
+	<title>
+		{% if page.title != "Home" %}
+			{{ page.title }} &middot;
+		{% endif %}
+		Bosun
+	</title>
 
-  <body>
-    <header class="app-bar promote-layer">
-      <div class="app-bar-container">
-        <button class="menu"><img src="{{site.github.url}}/images/hamburger.svg" alt="menu"></button>
-        <h1 class="logo">{{site.title}}</h1>
-        <section class="app-bar-actions">
-        <!-- Put App Bar Buttons Here -->
-        </section>
-      </div>
-    </header>
+	<link rel="stylesheet" href="{{site.github.url}}/styles/bootstrap.min.css">
+	<link rel="stylesheet" href="{{site.github.url}}/styles/navbar-static-top.css">
 
-    <nav class="navdrawer-container promote-layer">
-      <h4>Navigation</h4>
-      {% include sidebar.html %}
-    </nav>
+	<link rel="shortcut icon" href="{{site.github.url}}/public/favicon.ico">
+	
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
 
-    <main>
-        {{ content }}
-    </main>
-
-    <!-- build:js scripts/main.min.js -->
-    <script src="{{site.github.url}}/scripts/main.js"></script>
-    <!-- endbuild -->
-  </body>
+	</head>
+	<body>
+		<div class="navbar navbar-default navbar-static-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="{{ site.github.url }}/">Bosun</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						{% assign pages_list = site.pages %}
+						{% for order in (1..site.pages.size) %}
+							{% for node in pages_list %}
+								{% if node.title != null and node.order == order %}
+									{% if node.layout == "page" %}
+										<li {% if page.url == node.url %} class="active" {% endif %}>
+											<a href="{{site.github.url}}{{ node.url }}">{{ node.title }}</a>
+										</li>
+									{% endif %}
+								{% endif %}
+							{% endfor %}
+						{% endfor %}
+						<li><a href="https://github.com/StackExchange/bosun">GitHub</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			{{ content }}
+		</div>
+	</body>
 </html>
