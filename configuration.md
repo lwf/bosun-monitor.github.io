@@ -4,7 +4,7 @@ title: Configuration
 order: 3
 ---
 
-Syntax is sectional, with each section having a type and a name, followed by `{` and ending with `}`. Key/value pairs follow of the form `key = value`. Key names are non-whitespace characters before the `=`. The value goes until end of line and is a string. Multi-line strings are supported using backticks (``` ` ```) to delimit start and end of string. Comments go from a `#` to end of line (unless the `#` appears in a backtick string). Whitespace is trimmed at ends of values and keys. Files are UTF-8 encoded.
+Syntax is sectional, with each section having a type and a name, followed by `{` and ending with `}`. Key/value pairs follow of the form `key = value`. Key names are non-whitespace characters before the `=`. The value goes until end of line and is a string. Multi-line strings are supported using backticks (~~~ ` ~~~) to delimit start and end of string. Comments go from a `#` to end of line (unless the `#` appears in a backtick string). Whitespace is trimmed at ends of values and keys. Files are UTF-8 encoded.
 
 ## Variables
 
