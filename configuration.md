@@ -4,7 +4,7 @@ title: Configuration
 order: 3
 ---
 
-Syntax is sectional, with each section having a type and a name, followed by `{` and ending with `}`. Key/value pairs follow of the form `key = value`. Key names are non-whitespace characters before the `=`. The value goes until end of line and is a string. Multi-line strings are supported using backticks (~~~ ` ~~~) to delimit start and end of string. Comments go from a `#` to end of line (unless the `#` appears in a backtick string). Whitespace is trimmed at ends of values and keys. Files are UTF-8 encoded.
+Syntax is sectional, with each section having a type and a name, followed by `{` and ending with `}`. Key/value pairs follow of the form `key = value`. Key names are non-whitespace characters before the `=`. The value goes until end of line and is a string. Multi-line strings are supported using backticks to delimit start and end of string. Comments go from a `#` to end of line (unless the `#` appears in a backtick string). Whitespace is trimmed at ends of values and keys. Files are UTF-8 encoded.
 
 ## Variables
 
@@ -42,7 +42,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 
 Macros are sections that can define anything (including variables). It is not an error to reference an unknown variable in a macro. Other sections can reference the macro with `macro = name`. The macro's data will be expanded with the current variable definitions and inserted at that point in the section. Multiple macros may be thus referenced at any time. Macros may reference other macros. For example:
 
-```
+~~~
 $default_time = "2m"
 
 macro m1 {
@@ -61,13 +61,13 @@ alert os.high_cpu {
 	warn = $q > $w
 	crit = $q >= $c
 }
-```
+~~~
 
 Will yield a warn expression for the os.high_cpu alert:
 
-```
+~~~
 avg(q("avg:rate:os.cpu{host=ny-nexpose01}", "2m", "")) > 80
-```
+~~~
 
 and set `warnNotification = default` for that alert.
 
@@ -114,7 +114,7 @@ All body templates are associated, and so may be executed from another. Use the 
 
 An example:
 
-```
+~~~
 template name {
 	body = Name: {{.Alert.Name}}
 }
@@ -128,7 +128,7 @@ template ex {
 	`
 	subject = {{.Alert.Name}}: {{.Alert.Vars.q | .E}} on {{.Tags.host}}
 }
-```
+~~~
 
 #### unknown template
 
@@ -142,7 +142,7 @@ Variables and function available to the unknown template:
 
 Example:
 
-```
+~~~
 template ut {
 	subject = {{.Name}}: {{.Group | len}} unknown alerts
 	body = `
@@ -155,7 +155,7 @@ template ut {
 }
 
 unknownTemplate = ut
-```
+~~~
 
 ### alert
 
@@ -173,7 +173,7 @@ An alert is an evaluated expression which can trigger actions like emailing or l
 
 Example of notification lookups:
 
-```
+~~~
 notification all {
 	#...
 }
@@ -201,7 +201,7 @@ alert a {
 	# If the host tag does not match a or b*, no other notification is added.
 	critNotification = lookup("l", "v")
 }
-```
+~~~
 
 ### notification
 
@@ -220,7 +220,7 @@ A notification is a chained action to perform. The chaining continues until the 
 
 Example:
 
-```
+~~~
 # HTTP Post to a chatroom, email in 10m if not ack'd
 notification chat {
 	next = email
@@ -239,7 +239,7 @@ notification email {
 	post = https://company.slack.com/services/hooks/incoming-webhook?token=TOKEN
 	body = payload={"username": "bosun", "text": {{.|json}}, "icon_url": "http://stackexchange.github.io/bosun/images/tsaf-logo-mark.png"} 
 }
-```
+~~~
 
 ### lookup
 
@@ -249,7 +249,7 @@ The `lookup` function can be used in expressions to query lookup data. It takes 
 
 For example, to filter based on host:
 
-```
+~~~
 lookup cpu {
 	entry host=web-* {
 		high = 0.5
@@ -265,11 +265,11 @@ lookup cpu {
 alert cpu {
 	crit = avg(q("avg:rate:os.cpu{host=*}", "5m", "")) > lookup("cpu", "high")
 }
-```
+~~~
 
 Multiple groups are supported and separated by commas. For example:
 
-```
+~~~
 lookup cpu {
 	entry host=web-*,dc=eu {
 		high = 0.5
@@ -288,7 +288,7 @@ lookup cpu {
 alert cpu {
 	crit = avg(q("avg:rate:os.cpu{host=*,dc=*}", "5m", "")) > lookup("cpu", "high")
 }
-```
+~~~
 
 
 # <a name="expressions"></a>Expressions
@@ -442,7 +442,7 @@ Numbers may be specified in decimal (123.45), octal (072), or hex (0x2A). Expone
 
 # Example File
 
-```
+~~~
 tsdbHost = tsdb01.stackoverflow.com:4242
 smtpHost = mail.stackoverflow.com:25
 
@@ -469,4 +469,4 @@ alert cpu {
 	crit = $q < 40
 	notification = default
 }
-```
+~~~
