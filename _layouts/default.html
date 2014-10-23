@@ -24,6 +24,28 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
+	<style>
+		body {
+			min-height: 2000px;
+		}
+
+		.navbar-static-top {
+			margin-bottom: 19px;
+		}
+		#logo {
+			position: absolute;
+			top: 10px;
+			width: 30px;
+			height: 30px;
+		}
+		#logo-text {
+			margin-left: 38px;
+			font-size: 28px;
+			color: #1f5296;
+			letter-spacing: -1px;
+		}
+	</style>
+
 	</head>
 	<body>
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -35,7 +57,10 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="{{ site.github.url }}/">Bosun</a>
+					<a class="navbar-brand" href="{{ site.github.url }}/">
+						<img id="logo" src="{{ site.github.url }}/public/bosun-logo-mark.svg" />
+						<div id="logo-text">bosun</div>
+					</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
