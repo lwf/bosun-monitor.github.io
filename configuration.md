@@ -416,7 +416,7 @@ Returns the first key from the given lookup table with matching tags.
 
 #### nv(number, scalar)
 
-If any of the numbers are NaN (caused by some error), set them instead to scalar. This is useful to prevent unknown group and other errors from bubbling up.
+Change the NaN value during binary operations (when joining two queries) of unknown groups to the scalar. This is useful to prevent unknown group and other errors from bubbling up.
 
 ## Operators
 
