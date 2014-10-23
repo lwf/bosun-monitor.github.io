@@ -239,7 +239,7 @@ notification email {
 
 # post to a slack.com chatroom {
 	post = https://company.slack.com/services/hooks/incoming-webhook?token=TOKEN
-	body = payload={"username": "bosun", "text": {{.|json}}, "icon_url": "http://stackexchange.github.io/bosun/images/tsaf-logo-mark.png"} 
+	body = payload={"username": "bosun", "text": {{.|json}}, "icon_url": "http://stackexchange.github.io/bosun/public/bosun-logo-mark.svg"} 
 }
 ~~~
 
