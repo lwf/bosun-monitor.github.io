@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Walkthrough
+title: Getting Started
 order: 2
 ---
 
