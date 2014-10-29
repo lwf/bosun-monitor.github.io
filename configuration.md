@@ -420,7 +420,7 @@ Change the NaN value during binary operations (when joining two queries) of unkn
 
 ## Operators
 
-The standard math (+, -, *, /), relational (<, >, ==, !=, >= <=), logical (&&, ||), and unary(!, -) operators are supported. The binary operators require one side to be a scalar. Arrays will have the operator applied to each element. Examples:
+The standard math (`+`, `-`, `*`, `/`), relational (`<`, `>`, `==`, `!=`, `>=`, `<=`), logical (`&&`, `||`), and unary(`!`, `-`) operators are supported. The binary operators require one side to be a scalar. Arrays will have the operator applied to each element. Examples:
 
 * `q("q") + 1`
 * `-q("q")`
