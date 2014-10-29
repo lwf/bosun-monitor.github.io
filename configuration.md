@@ -418,6 +418,10 @@ Returns the first key from the given lookup table with matching tags.
 
 Change the NaN value during binary operations (when joining two queries) of unknown groups to the scalar. This is useful to prevent unknown group and other errors from bubbling up.
 
+#### dropna(series)
+
+Remove any NaN or Inf values from a series. Will error if this operation results in an empty series.
+
 ## Operators
 
 The standard math (`+`, `-`, `*`, `/`), relational (`<`, `>`, `==`, `!=`, `>=`, `<=`), logical (`&&`, `||`), and unary(`!`, `-`) operators are supported. The binary operators require one side to be a scalar. Arrays will have the operator applied to each element. Examples:
