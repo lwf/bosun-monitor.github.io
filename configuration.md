@@ -100,6 +100,7 @@ Templates are the message body for emails that are sent when an alert is trigger
 
 * Eval(string): executes the given expression and returns the first result with identical tags, or `nil` tags if none exists, otherwise `nil`.
 * EvalAll(string): executes the given expression and returns all results.
+* GetMeta(metric, name, tags): Returns metadata data for the given combination of metric, metadata name, and tag. `metric` and `name` are strings. `tags` may be a tag string (`"tagk=tagv,tag2=val2"`) or a tag set (`.Group`). If If `name` is the empty string, a slice of metadata matching the metric and tag is returned. Otherwise, only the metadata value is returned for the given name, or `nil` for no match.
 * Graph(string): returns an SVG graph of the expression with identical tags
 * GraphAll(string): returns an SVG graph of the expression
 * LeftJoin(expr, expr[, expr...]): results of the first expression (which may be a string or an expression) are left joined to results from all following expressions.
