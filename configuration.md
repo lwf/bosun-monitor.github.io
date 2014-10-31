@@ -411,6 +411,10 @@ Returns the input with its group removed. Used to combine queries from two diffe
 
 Returns the absolute value of the number.
 
+#### dropna(series)
+
+Remove any NaN or Inf values from a series. Will error if this operation results in an empty series.
+
 #### lookup(table, key)
 
 Returns the first key from the given lookup table with matching tags.
@@ -418,10 +422,6 @@ Returns the first key from the given lookup table with matching tags.
 #### nv(number, scalar)
 
 Change the NaN value during binary operations (when joining two queries) of unknown groups to the scalar. This is useful to prevent unknown group and other errors from bubbling up.
-
-#### dropna(series)
-
-Remove any NaN or Inf values from a series. Will error if this operation results in an empty series.
 
 ## Operators
 
