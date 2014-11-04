@@ -16,7 +16,7 @@ The only assumption made in this document is that the reader has a system capabl
 
 ## Install Docker
 
-If you do not already have docker installed on your system, you can install it following the instructions outlined in https://docs.docker.com/installation/.
+If you do not already have docker installed on your system, you can install it following the instructions outlined in [https://docs.docker.com/installation/](https://docs.docker.com/installation/).
 
 **Note:** Don’t forget to ensure the docker daemon is running before moving forward!
 
@@ -32,7 +32,7 @@ The above command tells the Docker daemon that you would like to start a new dae
 
 Bosun relies on metrics provided by other programs. For the majority of metrics we will be using a program called **scollector**. scollector is an agent that runs on hosts and will produce valuable output data about the state of that system. scollector also allows you to write custom collectors which permit you to record data that the basic scollector program does not gather. We will get into external collectors later on in the document.
 
-Binaries are available for Linux, Windows, and Mac at http://stackexchange.github.io/scollector/. For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
+Binaries are available for Linux, Windows, and Mac at [http://stackexchange.github.io/scollector/](http://stackexchange.github.io/scollector/). For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
 
 ## Configuring scollector
 
