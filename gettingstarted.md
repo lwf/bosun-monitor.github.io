@@ -10,58 +10,29 @@ This document is written as a Quick-Start to getting Bosun working in your envir
 
 # Assumptions
 
-The only assumption made in this document is that the reader has a Linux system capable of running Docker.
+The only assumption made in this document is that the reader has a system capable of running Docker.
 
 # Procedure
 
 ## Install Docker
-If you do not already have docker installed on your Linux system, you can install it following the instructions outlined in https://docs.docker.com/installation/. Basically, for the purpose of this tutorial, you can do the following:
 
-CentOS6:
+If you do not already have docker installed on your system, you can install it following the instructions outlined in https://docs.docker.com/installation/.
 
-	$ sudo yum install docker-io
-
-CentOS7: ‘sudo yum install docker’
-
-	$ sudo yum install docker
-
-Ubuntu:
-
-	$ sudo apt-get update
-	$ sudo apt-get install docker.io
-	$ sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker
-	$ sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
-
-**Note:** Don’t forget to ensure the docker daemon is running before moving forward! To do this, execute ‘sudo service docker start’ if you are on a RedHat-based distribution, or ‘sudo service docker.io start’ if you are on an Ubuntu or Debian based distribution.
+**Note:** Don’t forget to ensure the docker daemon is running before moving forward!
 
 ## Installing Bosun
 
 Once Docker is installed, you will want to pull the latest version of Bosun from the Docker Registry. To do this, execute the following command:
 
-	$ sudo docker run -d -p 4242:4242 -p 8070:8070 stackexchange/bosun
+	$ docker run -d -p 4242:4242 -p 8070:8070 stackexchange/bosun
 
-The above command tells the Docker daemon that you would like to start a new daemonized instance of bosun and you wish to port-forward 4242 and 8070 of your linux server into the docker container. After about 30 seconds, you should have a working Bosun instance on port 8070. You can navigate to the instance by opening a browser and heading to http://docker-server:8070 where docker-server is your server running the docker daemon.
+The above command tells the Docker daemon that you would like to start a new daemonized instance of bosun and you wish to port-forward 4242 and 8070 of your server into the docker container. After about 15 seconds, you should have a working Bosun instance on port 8070. You can navigate to the instance by opening a browser and heading to http://docker-server:8070 where docker-server is your server running the docker daemon.
 
 ## Getting data into Bosun
 
 Bosun relies on metrics provided by other programs. For the majority of metrics we will be using a program called **scollector**. scollector is an agent that runs on hosts and will produce valuable output data about the state of that system. scollector also allows you to write custom collectors which permit you to record data that the basic scollector program does not gather. We will get into external collectors later on in the document.
 
-To install scollector on a system, currently the best way to do this is by installing the Go development environment and compiling it yourself. It’s really simple.
-
-## Installing Go and scollector
-
-If you already have installed Go, skip to the next section. To get the go environment, head over to https://golang.org/dl/ and grab the relevant package for your system. You can follow the instructions on the https://golang.org/doc/install page for complete info, but the basic steps to get this going as of this writing are pasted below:
-
-	$ wget https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz
-	$ sudo tar -C /usr/local -xzvf go1.3.3.linux-amd64.tar.gz
-	$ export PATH=/usr/local/go/bin:$PATH
-
-Once these steps are done, you can build and install scollector:
-
-	$ mkdir ~/go
-	$ GOPATH=~/go go get github.com/stackexchange/scollector
-	$ sudo mkdir -p /opt/scollector
-	$ sudo cp ~/go/bin/scollector /opt/scollector/scollector
+Binaries are available for Linux, Windows, and Mac at http://stackexchange.github.io/scollector/. For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
 
 ## Configuring scollector
 
@@ -97,7 +68,6 @@ Click on the "Items" tab. You'll see a list of all the labels (names) used in me
 You should see the Graph tab with that metric pre-loaded and a graph displayed for all hosts. We want a single host, so enter in your hostname in that field and click the blue “Query” button. A new graph should show up. This graph is showing the last hour of cpu usage. Since you’ve only had your scollector running for a few minutes, you may not have a lot of data yet, but that’s not a problem for our tutorial.
 
 (ProTip: You can get the same results by clicking on the Items tab, clicking on the host you are interested in, then the "Available Metrics" tab. Clicking on one of the metrics you see there will bring you to the Graph tab with both the metric name and the host name pre-filled.)
-
 
 Now that you have a graph, if you scroll to the bottom of the page there is a section called “Queries.” This section shows you the syntax of the query used to generate the graph.
 
