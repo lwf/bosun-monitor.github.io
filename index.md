@@ -4,7 +4,7 @@ title: Home
 order: 1
 ---
 
-Bosun is an open-source advanced monitoring system targeting site reliability engineers and professional system administrators. It has been developed by [Matt Jibson](https://twitter.com/mjibson) and [Kyle Brandt](https://twitter.com/kylembrandt) at StackExchange. It has the following features and characteristics:
+Bosun is an open-source advanced monitoring system targeting site reliability engineers and professional system administrators. It has been developed by [Matt Jibson](https://twitter.com/mjibson) and [Kyle Brandt](https://twitter.com/kylembrandt) at [http://stackexchange.com/](Stack Exchange). It has the following features and characteristics:
 
 * An expression language for evaluating time series that provides extreme flexibility in alerting
 * High resolution metrics that never need to be rolled up
