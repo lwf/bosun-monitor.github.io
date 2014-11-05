@@ -75,4 +75,59 @@ template linux.tcp {
 }
 ~~~
 
+### Backup (Advanced Grouping)
+
+This shows the state of backups based on multiple conditions and multiple metrics. It also simulates a Left Join operation by substituting NaN Values with numbers and the nv functions in the rule, and using the LeftJoin template function. This stretches Bosun when it comes to grouping. Generally you might want to capture this sort of logic in your collector when going to these extremes, but this displays that you don't have to be limited to that:
+
+![](public/netbackup_notification.png)
+
+#### Rule
+
+~~~
+alert netbackup {
+	template = netbackup
+	$tagset = {class=*,client=*,schedule=*}
+	#Turn seconds into days
+	$attempt_age = max(q("sum:netbackup.backup.attempt_age$tagset", "10m", "")) / 60 / 60 / 24
+	$job_frequency = max(q("sum:netbackup.backup.frequency$tagset", "10m", "")) / 60 / 60 / 24
+	$job_status = max(q("sum:netbackup.backup.status$tagset", "10m", ""))
+	#Add 1/4 a day to the frequency as some buffer
+	$not_run_in_time = nv($attempt_age, 1e9) > nv($job_frequency+.25, 1)
+	$problems = $not_run_in_time || nv($job_status, 1)
+	$summary = sum(t($problems, ""))
+	warn = $summary
+}
+~~~
+
+#### Template Def
+
+~~~
+template netbackup {
+	subject = `{{.Last.Status}}: Netbackup has {{.Eval .Alert.Vars.summary}} Problematic Backups`
+	body = `
+	        {{template "header" .}}
+	        <p><a href="http://www.symantec.com/business/support/index?page=content&id=DOC5181">Symantec Reference Guide for Status Codes (PDF)</a>
+	        <p><a href="https://ny-back02.ds.stackexchange.com/opscenter/">View Backups in Opscenter</a>
+	        <h3>Status of all Tape Backups</h3>
+		<table>
+		<tr><th>Client</th><th>Policy</th><th>Schedule</th><th>Frequency</th><th>Attempt Age</th><th>Status</th></tr>
+	{{ range $v := .LeftJoin .Alert.Vars.job_frequency .Alert.Vars.attempt_age .Alert.Vars.job_status}}
+		{{ $freq := index $v 0 }}
+		{{ $age := index $v 1 }}
+		{{ $status := index $v 2 }}
+		<tr>
+			<td><a href="https://status.stackexchange.com/dashboard/node?node={{$freq.Group.client| short}}">{{$freq.Group.client| short}}</td>
+			<td>{{$freq.Group.class}}</td>
+			<td>{{$freq.Group.schedule}}</td>
+			<td>{{$freq.Value}}</td>
+			<td {{if gt $age.Value $freq.Value }} style="color: red;" {{end}}>{{$age.Value | printf "%.2f"}}</td>
+			<td{{if gt $status.Value 0.0}} style="color: red;" {{end}}>{{$status.Value}}</td>
+		<tr>
+	{{end}}
+	</table>`
+}
+
+~~~
+
+
 {% endraw %}
