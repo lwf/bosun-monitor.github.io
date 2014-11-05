@@ -112,6 +112,88 @@ template header {
 
 ~~~
 
+## Forecasting Alerts
+
+### Forecast Disk space
+This alert mixes thresholds and forecasting to trigger alerts based on disk space. This can be very useful because it can warn about a situation that will result in the loss of diskspace before it is too late to go and fix the issue. This is combined with a threshold based alert because a good general rule is to try to eliminate duplicate notifications / alerts on the same object.
+
+Once we have string support for lookup tables, the duration that the forecast acts on can be tuned per host when relevant (some disks will have longer or shorter periodicity).
+
+The forecastlr function returns the number of seconds until the specified value will be reached according to a linear regression. It is a pretty naive way of forecasting, but has been effective. Also, there is no reason we can't extend bosun to include more advanced forecasting functions.
+
+![Forecast Notification Image](public/disk_forecast_notification.png)
+
+#### Rule
+
+~~~
+lookup disk_space {
+    entry host=ny-omni01,disk=E {
+        warn_percent_free = 2
+        crit_percent_free = 0
+    }
+    entry host=*,disk=* {
+        warn_percent_free = 10
+        crit_percent_free = 0
+    }
+}
+
+alert os.diskspace {
+    macro = host_based
+    $notes = This alert triggers when there are issues detected in disk capacity. Two methods are used. The first is a traditional percentage based threshold. This alert also uses a linear regression to attempt to predict the amount of time until we run out of space. Forecasting is a hard problem, in particular to apply generically so there is a lot of room for improvement here. But this is a start
+    template = diskspace
+    $filter = host=*,disk=*
+    
+    ##Forecast Section
+    #Downsampling avg on opentsdb side will save the linear regression a lot of work
+    $days_to_zero = (forecastlr(q("avg:6h-avg:os.disk.fs.percent_free{$filter}", "7d", ""), 0) / 60 / 60 / 24)
+    #Threshold can be higher here once we support string lookups in lookup tables https://github.com/bosun-monitor/bosun/issues/268
+    $warn_days = $days_to_zero > 0 && $days_to_zero < 7
+    $crit_days =   $days_to_zero > 0 && $days_to_zero < 1
+    
+    ##Percent Free Section
+    $pf_time = "5m"
+    $percent_free = avg(q("avg:os.disk.fs.percent_free{host=*,disk=*}", $pf_time, ""))
+    $used = avg(q("avg:os.disk.fs.space_used{host=*,disk=*}", $pf_time, ""))
+    $total = avg(q("avg:os.disk.fs.space_total{host=*,disk=*}", $pf_time, ""))
+    $warn_percent = $percent_free <  lookup("disk_space", "warn_percent_free")
+    #Linux stops root from writing at less than 5%
+    $crit_percent = $percent_free <  lookup("disk_space", "crit_percent_free")
+    #For graph (long time)
+    $percent_free_graph = q("avg:1h-min:os.disk.fs.percent_free{host=*,disk=*}", "4d", "")
+    
+    ##Main Logic
+    warn = $warn_percent || $warn_days
+    crit = $crit_percent || $crit_days
+    
+    ##Options
+    squelch = $disk_squelch
+    ignoreUnknown = true
+    #This is needed because disks go away when the forecast doesn't
+    unjoinedOk = true
+    
+}
+~~~
+
+#### Template
+
+~~~
+template diskspace {
+    body = `{{template "header" .}}
+    <p>Host: <a href="{{.HostView .Group.host | short }}">{{.Group.host}}</a>
+    <br>Disk: {{.Group.disk}}
+
+    <p>Percent Free: {{.Eval .Alert.Vars.percent_free | printf "%.2f"}}%
+    <br>Used: {{.Eval .Alert.Vars.used | bytes}}
+    <br>Total: {{.Eval .Alert.Vars.total | bytes}}
+    <br>Est. {{.Eval .Alert.Vars.days_to_zero | printf "%.2f"}} days remain until 0% free space
+    {{/* .Graph .Alert.Vars.percent_free_graph */}}
+    {{/* What is below can be replaced by the below once https://github.com/bosun-monitor/bosun/issues/348 is fixed */}}
+    {{printf "q(\"avg:1h-min:os.disk.fs.percent_free{host=%s,disk=%s}\", \"7d\", \"\")" .Group.host .Group.disk | .Graph}}
+    `
+    subject = {{.Last.Status}}: Diskspace: ({{.Alert.Vars.used | .Eval | bytes}}/{{.Alert.Vars.total | .Eval | bytes}}) {{.Alert.Vars.percent_free | .Eval | printf "%.2f"}}% Free on {{.Group.host}}:{{.Group.disk}} (Est. {{.Eval .Alert.Vars.days_to_zero | printf "%.2f"}} days remain)
+}
+~~~
+
 ## Alerts with Notification Breakdowns
 
 A common pattern is to trigger an alert on a scope that convers multiple metrics
