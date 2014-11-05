@@ -6,6 +6,9 @@ order: 3
 
 {% raw %}
 
+* auto-gen TOC:
+{:toc}
+
 ## Basic Host Based Alerts
 
 ### Using a Macro to establish different base contacts for different systems based on name (and alert on low memory)
