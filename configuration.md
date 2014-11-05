@@ -401,6 +401,65 @@ Group functions modify the OpenTSDB groups.
 
 Transposes N series of length 1 to 1 series of length N. If the group parameter is not the empty string, the number of series returned is equal to the number of tagks passed. This is useful for performing scalar aggregation across multiple results from a query. For example, to get the total memory used on the web tier: `sum(t(avg(q("avg:os.mem.used{host=*-web*}", "5m", "")), ""))`.
 
+##### How transpose works conceptually
+Transpose Grouped results into a Single Result:  
+
+Before Transpose (Value Type is Number):  
+
+Group       | Value  |
+----------- | ----- |
+{host=web01} | 1 |
+{host=web02} | 7 |
+{host=web03} | 4 |
+
+After Transpose (Value Type is Series):  
+
+Group        | Value  |
+----------- | ----- |
+{} | 1,7,4 |
+
+Transpose Groups results into Multiple Results:  
+
+Before Transpose by host (Value Type is Number)  
+
+Group        | Value  |
+----------- | ----- |
+{host=web01,disk=c} | 1 |
+{host=web01,disc=d} | 3 |
+{host=web02,disc=c} | 4 |
+
+After Transpose by "host" (Value type is Series)  
+
+Group        | Value  |
+------------ | ------ |
+{host=web01} | 1,3 |
+{host=web02} | 4 |
+
+##### Useful Example of Transpose
+Alert if more than 50% of servers in a group have ping timeouts
+
+	alert or_down {
+		$group = host=or-*
+		# bosun.ping.timeout is 0 for no timeout, 1 for timeout
+		$timeout = q("sum:bosun.ping.timeout{$group}", "5m", "")
+		# timeout will have multiple groups, such as or-web01,or-web02,or-web03.
+		# each group has a series type (the observations in the past 10 mintutes)
+		# so we need to *reduce* each series values of each group into a single number:
+		$max_timeout = max($timeout)
+		# Max timeout is now a group of results where the value of each group is a number. Since each
+		# group is an alert instance, we need to regroup this into a sigle alert. We can do that by 
+		# transposing with t()
+		$max_timeout_series = t("$max_timeout", "")
+		# $max_timeout_series is now a single group with a value of type series. We need to reduce
+		# that series into a single number in order to trigger an alert.
+		$number_down_series = sum($max_timeout_series)
+		$total_servers = len($max_timeout_series)
+		$percent_down = $number_down_servers / $total_servers) * 100
+		warnNotificaiton = $percent_down > 25
+	}
+
+Since our templates can reference any variable in this alert, we can show which servers are down in the notification, even though the alert just triggers on 25% of or-\* servers being down.
+
 #### ungroup(number)
 
 Returns the input with its group removed. Used to combine queries from two differing groups.
