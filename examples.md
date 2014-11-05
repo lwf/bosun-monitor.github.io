@@ -517,5 +517,24 @@ template netbackup {
 
 ~~~
 
+## Conditional Alerts
+
+###Swapping notification unless there is a high exim mail queue
+This alert makes it so that swapping won't trigger if there is a high exim mail queue on the host that is swapping. All operators (such as &&) perform a join, so this alert makes it so if there is no exim mailq for that host, then it is as if the mail queue were high.
+
+####Rule
+~~~
+alert linux.swapping {
+    macro = host_based
+    template = generic
+    $notes = This alert does not trigger for our mail servers with the mail queue is high
+    #NV makes it so that if mailq doesn't exist for the Host, the NaN that gets returned gets replaced with a 1 (True)
+    $mail_q = nv(max(q("sum:exim.mailq_count{host=*}", "2h", "") > 5000), 1)
+    $metric = "sum:rate{counter,,1}:linux.mem.pswp{host=*,direction=in}"
+    $q = (median(q($metric, "2h", "")) > 1) && ! $mail_q
+    warn = $q
+    squelch = host=ny-devsearch*|ny-git01
+}
+~~~ 
 
 {% endraw %}
