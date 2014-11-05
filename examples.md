@@ -248,14 +248,12 @@ template route.performance {
 
 
 ## Alerts with Notification Breakdowns
-
 A common pattern is to trigger an alert on a scope that covers multiple metrics
 (or hosts, services, etc.), but then to send more detailed information in
 notification. This is useful when you notice that certain failures tend to go
 together.
 
 ### A Linux TCP Stack Alert
-
 When alerting on issues with the Linux TCP stack on a host, you probably don't
 want N alerts about all TCP stats, but just one alert that shows breakdowns:
 
@@ -313,6 +311,152 @@ template linux.tcp {
 			<tr><td>TOTAL Of Above</td><td>{{.Eval .Alert.Vars.total_err | printf "%.2f"}}<td></tr>
 		</table>`
 	subject = {{.Last.Status}}: {{.Eval .Alert.Vars.total_err | printf "%.2f"}} tcp errors on {{.Group.host}}
+}
+~~~
+
+### Dell Hardware Alert
+No need for N Hardware alerts when hardware is bad, just send one notification with the information needed. Metadata (generally string information) can be reported to bosun, and is reported by scollector. Therefore in the notification we can include things like the model and the service tag.
+
+![](public/hw_notification.png)
+
+####Rule
+~~~
+alert hardware {
+    macro = host_based
+    template = hardware
+    $time = "30m"
+    $notes = This alert triggers on omreport's "system" status, which *should* be a rollup of the entire system state. So it is possible to see an "Overall System status" of bad even though the breakdowns below are all "Ok". If this is the case, look directly in OMSA using the link below
+    
+    #By Component
+    $power = max(q("sum:hw.ps{host=*,id=*}", $time, ""))
+    $battery = max(q("sum:hw.storage.battery{host=*,id=*}", $time, ""))
+    $controller = max(q("sum:hw.storage.controller{host=*,id=*}", $time, ""))
+    $enclosure = max(q("sum:hw.storage.enclosure{host=*,id=*}", $time, ""))
+    $physical_disk = max(q("sum:hw.storage.pdisk{host=*,id=*}", $time, ""))
+    $virtual_disk = max(q("sum:hw.storage.vdisk{host=*,id=*}", $time, ""))
+    #I believe the system should report the status of non-zero if the anything is bad
+    #(omreport system), so everything else is for notification purposes. This works out
+    #because not everything has all these components
+    $system = max(q("sum:hw.system{host=*,component=*}", $time, ""))
+    
+    #Component Summary Per Host
+    $s_power= sum(t($power, "host"))
+    $s_battery = sum(t($battery, "host"))
+    
+    warn = $system
+}
+~~~
+
+####Template
+~~~
+template hardware {
+    body = `
+    <p>Overall System status is  {{if gt .Value 0.0}} <span style="color: red;">Bad</span>
+              {{else}} <span style="color: green;">Ok</span>
+              {{end}}</p>
+    {{template "header" .}}
+    <p><a href="https://{{.Group.host}}:1311/OMSALogin?msgStatus=null">OMSA Login for host {{.Group.host}}</a>
+    <h3>General Host Info</h3>
+    {{ with .GetMeta "" "svctag" (printf "host=%s" .Group.host) }}
+        Service Tag: <a href="http://www.dell.com/support/home/us/en/04/product-support/servicetag/{{.}}">{{.}}</a>
+    {{ end }}
+    
+    {{ with .GetMeta "" "model" (printf "host=%s" .Group.host) }}
+        <br>Model: {{.}}
+    {{ end }}
+    
+    {{ with .GetMeta "" "version" (printf "host=%s" .Group.host) }}
+        <br>OS: {{.}}
+    {{ end }}
+    
+    <h3>Power Supplies</h3>
+    <table>
+    <tr><th>Power Supply Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.power}}
+        {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+              {{if gt $r.Value 0.0}} <td style="color: red;">Bad</td>
+              {{else}} <td style="color: green;">Ok</td>
+              {{end}}
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+    
+    <h3>Batteries</h3>
+    <table>
+    <tr><th>Battery Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.battery}}
+        {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+    
+    <h3>Controllers</h3>
+    <table>
+    <tr><th>Controller Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.controller}}
+        {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+              {{if gt $r.Value 0.0}} <td style="color: red;">Bad</td>
+              {{else}} <td style="color: green;">Ok</td>
+              {{end}}
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+
+    <h3>Enclosures</h3>
+    <table>
+    <tr><th>Enclosure Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.enclosure}}
+      {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+              {{if gt $r.Value 0.0}} <td style="color: red;">Bad</td>
+              {{else}} <td style="color: green;">Ok</td>
+              {{end}}
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+
+    <h3>Physical Disks</h3>
+    <table>
+    <tr><th>Physical Disk Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.physical_disk}}
+      {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+              {{if gt $r.Value 0.0}} <td style="color: red;">Bad</td>
+              {{else}} <td style="color: green;">Ok</td>
+              {{end}}
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+
+    <h3>Virtual Disks</h3>
+    <table>
+    <tr><th>Virtual Disk Id</th><th>Status</th></tr>
+    {{range $r := .EvalAll .Alert.Vars.virtual_disk}}
+      {{if eq $r.Group.host $.Group.host}}
+            <tr>
+              <td>{{$r.Group.id}}</td>
+              {{if gt $r.Value 0.0}} <td style="color: red;">Bad</td>
+              {{else}} <td style="color: green;">Ok</td>
+              {{end}}
+            </tr>
+        {{end}}
+    {{end}}
+    </table>
+    `
+    subject = {{.Last.Status}}: {{replace .Alert.Name "." " " -1}}: on {{.Group.host}}
 }
 ~~~
 
