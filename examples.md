@@ -6,6 +6,112 @@ order: 3
 
 {% raw %}
 
+## Basic Host Based Alerts
+
+### Using a Macro to establish different base contacts for different systems based on name (and alert on low memory)
+This is an example of one of our basic alerts at Stack Exchange. We have an IT and SRE team, so for host based alerts we make it so that the appropriate team is alerted for those hosts using our macro and lookup functionality. Macros reduce reuse for alert definitions. The lookup table is like a case statement that lets you change values based on the instance of the alert. The generic template is meant for when warn and crit use basically the same expression with different thresholds.  Templates can include other templates, so we make reusable components that we may want to include in other alerts.
+
+#### Rule
+
+~~~
+lookup host_base_contact {
+    entry host=nyhq-|-int|den-*|lon-* {
+        main_contact = it
+        chat_contact = it-chat
+    }
+    entry host=* {
+        main_contact = default
+    }
+}
+
+macro host_based {
+    warnNotification = lookup("host_base_contact", "main_contact")
+    critNotification = lookup("host_base_contact", "main_contact")
+    warnNotification = lookup("host_base_contact", "chat_contact")
+    critNotification = lookup("host_base_contact", "chat_contact")
+}
+
+alert os.low.memory {
+    macro = host_based
+    template = generic
+    $notes = In Linux, Buffers and Cache are considered "Free Memory"
+    #Unit string shows up in the subject of the "Generic" template
+    $unit_string = % Free Memory
+    $q = avg(q("avg:os.mem.percent_free{host=*}", $default_time, ""))
+    crit = $q <= .5
+    warn = $q < 5
+    squelch = host=sql|devsearch
+}
+~~~
+
+#### Template
+
+~~~
+
+template generic {
+    body = `{{template "header" .}}
+    {{template "def" .}}
+    
+    {{template "tags" .}}
+
+    {{template "computation" .}}`
+    subject = {{.Last.Status}}: {{replace .Alert.Name "." " " -1}}: {{.Eval .Alert.Vars.q | printf "%.2f"}}{{if .Alert.Vars.unit_string}}{{.Alert.Vars.unit_string}}{{end}} on {{.Group.host}}
+}
+
+template def {
+    body = `<p><strong>Alert definition:</strong>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>{{replace .Alert.Name "." " " -1}}</td></tr>
+        <tr>
+            <td>Warn:</td>
+            <td>{{.Alert.Warn}}</td></tr>
+        <tr>
+            <td>Crit:</td>
+            <td>{{.Alert.Crit}}</td></tr>
+    </table>`
+}
+
+template tags {
+    body = `<p><strong>Tags</strong>
+    
+    <table>
+        {{range $k, $v := .Group}}
+            {{if eq $k "host"}}
+                <tr><td>{{$k}}</td><td><a href="{{$.HostView $v}}">{{$v}}</a></td></tr>
+            {{else}}
+                <tr><td>{{$k}}</td><td>{{$v}}</td></tr>
+            {{end}}
+        {{end}}
+    </table>`
+}
+
+template computation {
+    body = `
+    <p><strong>Computation</strong>
+    
+    <table>
+        {{range .Computations}}
+            <tr><td><a href="{{$.Expr .Text}}">{{.Text}}</a></td><td>{{.Value}}</td></tr>
+        {{end}}
+    </table>`
+}
+
+template header {
+    body = `<p><a href="{{.Ack}}">Acknowledge alert</a>
+    <p><a href="{{.Rule}}">View the Rule + Template in the Bosun's Rule Page</a>
+    {{if .Alert.Vars.notes}}
+    <p>Notes: {{.Alert.Vars.notes}}
+    {{end}}
+    {{if .Group.host}}
+    <p><a href="https://status.stackexchange.com/dashboard/node?node={{.Group.host}}">View Host {{.Group.host}} in Opserver</a>
+    {{end}}
+    `
+}
+
+~~~
+
 ## Alerts with Notification Breakdowns
 
 A common pattern is to trigger an alert on a scope that convers multiple metrics
