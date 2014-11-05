@@ -115,7 +115,7 @@ template header {
 ## Forecasting Alerts
 
 ### Forecast Disk space
-This alert mixes thresholds and forecasting to trigger alerts based on disk space. This can be very useful because it can warn about a situation that will result in the loss of diskspace before it is too late to go and fix the issue. This is combined with a threshold based alert because a good general rule is to try to eliminate duplicate notifications / alerts on the same object.
+This alert mixes thresholds and forecasting to trigger alerts based on disk space. This can be very useful because it can warn about a situation that will result in the loss of diskspace before it is too late to go and fix the issue. This is combined with a threshold based alert because a good general rule is to try to eliminate duplicate notifications / alerts on the same object. So these are applied and tuned by the operator and are not auto-magic.
 
 Once we have string support for lookup tables, the duration that the forecast acts on can be tuned per host when relevant (some disks will have longer or shorter periodicity).
 
@@ -194,9 +194,62 @@ template diskspace {
 }
 ~~~
 
+## Anomalous Alerts
+The idea of an anomalous alert it in Bosun is that a deviation from the norm can be detected without having to set static thresholds for everything. These can be very useful when the amount of data makes it unfeasible to manually set thresholds for these. Attempts to fully automate this from what I have seen and been told are noisy. So Bosun doesn't just have an "anomalous" function, but rather you can query history and do various comparisons with that data.
+
+### Anomalous Response time for a Specific Route
+At Stack Exchange we send which web route was hit to haproxy so that gets logged (It is removed before sent to the client). With over a thousand routes, static thresholds are not feasible. So this looks at history using the band function, and compares it to current performance. An alert is then triggered if the route makes up more than 1% of our total hits, and has gotten slower or faster by more than 10 milliseconds.
+
+![Anomalous Route Performance Notification](public/anom_route_notification.png)
+
+#### Rule
+~~~
+alert slower.route.performance {
+    template = route.performance
+    $notes = Response time is based on HAProxy's Tr Value. This is the web server response time (time elapsed between the moment the TCP connection was established to the web server and the moment it send its complete response header
+    $duration = "1d"
+    $route=*
+    $metric = "sum:10m-avg:haproxy.logs.route_tr_median{route=$route}"
+    $route_hit_metric = "sum:10m-avg:rate{counter,,1}:haproxy.logs.hits_by_route{route=$route}"
+    $total_hit_metric = "sum:10m-avg:rate{counter,,1}:haproxy.logs.hits_by_route"
+    $route_hits = change($route_hit_metric, $duration, "")
+    $total_hits = change($total_hit_metric, $duration, "")
+    $hit_percent = $route_hits / $total_hits * 100
+    $current_hitcount =  len(q($metric, $duration, ""))
+    $period = "7d"
+    $lookback = 4
+    $history = band($metric, $duration, $period, $lookback)
+    $past_dev = dev($history)
+    $past_median = percentile($history, .5)
+    $current_median = percentile(q($metric, $duration, ""), .5)
+    $diff = $current_median - $past_median
+    warn = $current_median > ($past_median + $past_dev*2) && abs($diff) > 10 && $hit_percent > 1
+    warnNotification = default
+    ignoreUnknown = true
+}
+~~~
+
+#### Template
+~~~
+template route.performance {
+    body = `{{template "header" .}}
+    <br>
+    <br><span style="font-weight: bold;">Route: {{.Group.route}}</span>
+    <br>Past Median: {{.Eval .Alert.Vars.current_median | printf "%.2f ms"}}
+    <br>Current Median: {{.Eval .Alert.Vars.past_median | printf "%.2f ms"}}
+    <br>Difference: {{.Eval .Alert.Vars.diff | printf "%.2f ms"}}
+    <br>Route Hits: {{.Eval .Alert.Vars.route_hits | printf "%.2f hits"}}
+    <br>Total Hits: {{.Eval .Alert.Vars.total_hits | printf "%.2f hits "}}
+    <br>Route Hit Percentage of Total: {{.Eval .Alert.Vars.hit_percent | printf "%.2f"}}%
+`
+    subject = {{.Last.Status}}: Median Response Time Change of  {{.Eval .Alert.Vars.diff | printf "%.2f ms"}} (Current: {{.Eval .Alert.Vars.current_median | printf "%.2f ms"}} Past: {{.Eval .Alert.Vars.past_median | printf "%.2f ms"}}) on {{.Group.route}}
+}
+~~~
+
+
 ## Alerts with Notification Breakdowns
 
-A common pattern is to trigger an alert on a scope that convers multiple metrics
+A common pattern is to trigger an alert on a scope that covers multiple metrics
 (or hosts, services, etc.), but then to send more detailed information in
 notification. This is useful when you notice that certain failures tend to go
 together.
