@@ -9,7 +9,23 @@ order: 3
 * auto-gen TOC:
 {:toc}
 
-## Basic Host Based Alerts
+## Basic Alerts
+
+### Combing Two Metrics (HAProxy Connections near Session Limit)
+
+####Rule
+In this alert we use the slim (session limit) metric and compare it to the current amount of sessions on each frontend. Because of this ability to combine metrics, we can easily create a percentage of utilization even though that metric doesn't exist in haproxy's csv stats.
+
+~~~
+alert haproxy_session_limit {
+    macro = host_based
+    template = generic
+    $notes = This alert monitors the percentage of sessions against the session limit in haproxy (maxconn) and alerts when we are getting close to that limit and will need to raise that limit. This alert was created due to a socket outage we experienced for that reason
+    $q = max(q("sum:haproxy.frontend.scur{host=*,pxname=*,tier=*}", "5m", "")) / max(q("sum:haproxy.frontend.slim{host=*,pxname=*,tier=*}", "5m", "")) * 100
+    warn = $q > 80
+    crit = $q > 95
+}
+~~~
 
 ### Using a Macro to establish different base contacts for different systems based on name (and alert on low memory)
 This is an example of one of our basic alerts at Stack Exchange. We have an IT and SRE team, so for host based alerts we make it so that the appropriate team is alerted for those hosts using our macro and lookup functionality. Macros reduce reuse for alert definitions. The lookup table is like a case statement that lets you change values based on the instance of the alert. The generic template is meant for when warn and crit use basically the same expression with different thresholds.  Templates can include other templates, so we make reusable components that we may want to include in other alerts.
