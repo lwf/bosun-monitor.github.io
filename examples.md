@@ -29,6 +29,22 @@ alert haproxy_session_limit {
 }
 ~~~
 
+### Alert when something has *consistently* in a certain state for a period of time (Puppet has been left disabled)
+Some metrics represent bools, (0 for false, 1 for true). If we take a time series and run min on that, we know that has been in a false state for the entire duration. So the following lets us know if puppet has been left disabled for more than 24 hours:
+
+####Rule 
+
+~~~
+alert puppet.left.disabled {
+    macro = host_based
+    template = generic
+    $notes = More often than not, if puppet has been consistently disabled for more than 24 hours some forgot to re-enable it
+    $oquery = "avg:24h-min:puppet.disabled{host=*}"
+    $q = min(q($oquery, "24h", ""))
+    warn = $q > 0
+}
+~~~
+
 ### Using a Macro to establish different base contacts for different systems based on name (and alert on low memory)
 This is an example of one of our basic alerts at Stack Exchange. We have an IT and SRE team, so for host based alerts we make it so that the appropriate team is alerted for those hosts using our macro and lookup functionality. Macros reduce reuse for alert definitions. The lookup table is like a case statement that lets you change values based on the instance of the alert. The generic template is meant for when warn and crit use basically the same expression with different thresholds.  Templates can include other templates, so we make reusable components that we may want to include in other alerts.
 
