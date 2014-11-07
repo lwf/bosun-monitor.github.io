@@ -21,7 +21,9 @@ alert haproxy_session_limit {
     macro = host_based
     template = generic
     $notes = This alert monitors the percentage of sessions against the session limit in haproxy (maxconn) and alerts when we are getting close to that limit and will need to raise that limit. This alert was created due to a socket outage we experienced for that reason
-    $q = max(q("sum:haproxy.frontend.scur{host=*,pxname=*,tier=*}", "5m", "")) / max(q("sum:haproxy.frontend.slim{host=*,pxname=*,tier=*}", "5m", "")) * 100
+    $current_sessions = max(q("sum:haproxy.frontend.scur{host=*,pxname=*,tier=*}", "5m", ""))
+    $session_limit = max(q("sum:haproxy.frontend.slim{host=*,pxname=*,tier=*}", "5m", ""))
+    $q = ($current_sessions / $session_limit) * 100
     warn = $q > 80
     crit = $q > 95
 }
@@ -539,6 +541,7 @@ template netbackup {
 This alert makes it so that swapping won't trigger if there is a high exim mail queue on the host that is swapping. All operators (such as &&) perform a join, so this alert makes it so if there is no exim mailq for that host, then it is as if the mail queue were high.
 
 ####Rule
+
 ~~~
 alert linux.swapping {
     macro = host_based
