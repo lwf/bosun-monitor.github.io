@@ -30,20 +30,7 @@ The above command tells the Docker daemon that you would like to start a new dae
 
 ## Getting data into Bosun
 
-Bosun relies on metrics provided by other programs. For the majority of metrics we will be using a program called **scollector**. scollector is an agent that runs on hosts and will produce valuable output data about the state of that system. scollector also allows you to write custom collectors which permit you to record data that the basic scollector program does not gather. We will get into external collectors later on in the document.
-
-Binaries are available for Linux, Windows, and Mac at [http://stackexchange.github.io/scollector/](http://stackexchange.github.io/scollector/). For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
-
-## Configuring scollector
-
-scollector can be fed relevant information from the command line, however it is cleaner to provide scollector the information it needs in a config file, _scollector.conf_. In our case, the only thing we need to provide to scollector at this point is the hostname/ip address of the docker server where the Bosun container is running. If you wish to do this via the command line, the argument is **-h**. You can get complete help from scollector by using the **--help** argument. These two commands should be run as root:
-
-	$ echo "host=<docker-server-ip>:8070" >> /opt/scollector/scollector.conf
-	$ /opt/scollector/scollector
-
-This will start scollector in foreground mode. If you’d like to run scollector in the background, you can start it as shown below. Until scollector has official packages for the various linux environments, the best way to start it at boot is via @reboot crontab or an entry in /etc/rc.local. Be aware that this below command should be run as root, so putting it into a crontab for a user will cause unexpected behavior.
-
-	$ /opt/scollector/scollector >> /var/log/scollector.log 2>&1 &
+The Bosun docker image self populates a fair amout of data. See the [scollector](#scollector) section below if you'd like to know more, but you can skip it for now.
 
 ## Checking for data in Bosun
 
@@ -135,5 +122,22 @@ When you hit “test” after putting the above template into the template field
 ## Persisting your alert
 
 All of the steps thus far have been geared towards getting your feet wet with Bosun. At this point, you have an alert for high cpu that produces a rather nice-looking alert, but at this point Bosun isn’t going to alert on it. In order for the alert to be incorporated into bosun, it must be added to the config file. We can test the syntax of our alert and config file by going to the “Test Config” pane of Bosun, or navigate directly at http://your-docker-server:8070/config. Paste in your alert and template fields as shown above to the end of the config file and hit the test button. If Bosun says the config is valid, you are free to copy the config from that window and overwrite the existing docker.conf file with your new alert and template.
+
+# scollector
+
+Bosun relies on metrics provided by other programs. For the majority of metrics we will be using a program called **scollector**. scollector is an agent that runs on hosts and will produce valuable output data about the state of that system. scollector also allows you to write custom collectors which permit you to record data that the basic scollector program does not gather. We will get into external collectors later on in the document. scollector is already installed and running on the docker image.
+
+Binaries are available for Linux, Windows, and Mac at [http://stackexchange.github.io/scollector/](http://stackexchange.github.io/scollector/). For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
+
+## Configuring scollector
+
+scollector can be fed relevant information from the command line, however it is cleaner to provide scollector the information it needs in a config file, _scollector.conf_. In our case, the only thing we need to provide to scollector at this point is the hostname/ip address of the docker server where the Bosun container is running. If you wish to do this via the command line, the argument is **-h**. You can get complete help from scollector by using the **--help** argument. These two commands should be run as root:
+
+	$ echo "host=<docker-server-ip>:8070" >> /opt/scollector/scollector.conf
+	$ /opt/scollector/scollector
+
+This will start scollector in foreground mode. If you’d like to run scollector in the background, you can start it as shown below. Until scollector has official packages for the various linux environments, the best way to start it at boot is via @reboot crontab or an entry in /etc/rc.local. Be aware that this below command should be run as root, so putting it into a crontab for a user will cause unexpected behavior.
+
+	$ /opt/scollector/scollector >> /var/log/scollector.log 2>&1 &
 
 {% endraw %}
