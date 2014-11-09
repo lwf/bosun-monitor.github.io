@@ -18,7 +18,7 @@ The main components are:
    * Can data poll via network devices via SNMP and VSphere
    * Can run external scripts
    * Queues data when Bosun can't be reached
- * **bosun**: Data collection and relaying, Alerting, and Graphing 
+ * **bosun**: Data collection and relaying, alerting, and graphing 
    * Has an expression language for creating alerts from times series queried from OpenTSDB
    * Exposes the Go template language for users to craft alert notifications with
    * Has notification escalation
@@ -36,5 +36,25 @@ The main components are:
 
 ##Diagram
 ![Architecture Diagram](public/arch.png)
+
+#Alerts
+Each alert definition has the potential to turn into multiple alert instances ("alerts"). Alerts are uniquely identified by the alert name and the OpenTSDB tagset (which we also call the "group"). Every possible group in your top level expression is evaluated independently. So for example, with an expression like `avg(q("avg:rate{counter,,1}:os.cpu{host=*}", "5m", ""))` you can get an alert for every tag value of the "host" tag key that has sent data for the os.cpu metric. In this way bosun integrates fairly tighly with OpenTSDB, however there are ways to alert groups in expressions.
+
+##Severity States
+Alerts can be in one of the following severity levels (From Highest to Lowest):
+
+ * Unknown: When a warn or crit expression can not be evaluated because data is missing. When you defined an alert on a tagsets, bosun tracks instances of these tagsets for each expression used in the expression. If one of these is no longer present, that instance goes into an unknown state. Since bosun has data pushed to it, unknown can mean that either data collection has failed, or that the thing is down.
+ * Critical: The expression that `crit` is equal to in the alert definition is non-zero (true). It is recommend that "Critical" be thought of as "has failed".
+ * Warning: The expression that `warn` is equal to in the alert definition is non-zero (true) *and* critical is not true. It is recommended that warning be thought of ha "could lead to failure"
+ * Error: There is some sort of bosun internal error such as divide by zero or "response to large" with the alert.
+ * Normal: None of the other states
+
+##Additional States
+ * Active: The alert is currently in the severity state that triggered it. This is indicated by an exclamation on the dashboard
+ * Silenced: Someone has created a silence rule that stops this alert from triggering any notification. It will also automatically close when the alert is no longer active.
+ * Acknowledged: Someone has acknowledged the alert, the reason and person should be available via the web interface. Acknowledged stop sending notifications as long as the severity doesn't increase.
+ * Unacknowledged: Nobody has acknowledged the alert yet at its current severity level
+
+
 
 {% endraw %}
