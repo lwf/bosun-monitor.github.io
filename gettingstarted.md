@@ -127,7 +127,7 @@ All of the steps thus far have been geared towards getting your feet wet with Bo
 
 Bosun relies on metrics provided by other programs. For the majority of metrics we will be using a program called **scollector**. scollector is an agent that runs on hosts and will produce valuable output data about the state of that system. scollector also allows you to write custom collectors which permit you to record data that the basic scollector program does not gather. We will get into external collectors later on in the document. scollector is already installed and running on the docker image.
 
-Binaries are available for Linux, Windows, and Mac at [http://stackexchange.github.io/scollector/](http://stackexchange.github.io/scollector/). For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
+Binaries are available for Linux, Windows, and Mac at [http://bosun.org/scollector/](http://bosun.org/scollector/). For the rest of this guide we assume it has been installed to `/opt/scollector/scollector`.
 
 ## Configuring scollector
 
