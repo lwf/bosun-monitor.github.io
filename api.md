@@ -1,7 +1,7 @@
 ---
 layout: page
 title: API
-order: 6
+order: 7
 ---
 
 Most endpoints support both GET and POST requests. Listed parameters may be

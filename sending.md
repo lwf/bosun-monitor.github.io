@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Send Data
-order: 5
+order: 6
 ---
 
 Sending data to bosun is done by treating your bosun host exactly like an OpenTSDB host. That is, POST to `http://bosun:80/api/put` with formats described at [http://opentsdb.net/docs/build/html/api_http/put.html](http://opentsdb.net/docs/build/html/api_http/put.html).
