@@ -34,13 +34,13 @@ The Bosun docker image self populates a fair amout of data. See the [scollector]
 
 ## Checking for data in Bosun
 
-Once scollector is running, assuming there are no firewalls preventing communication between the host and server on port 8070, Bosun should be getting statistics from the scollector running on the system. We can check this by going to http://<docker-server-ip>:8070/items. If you see a list of metrics, congratulations! You're now receiving data. At the bottom of the page (or in a second column if the web browser window is wide enough), you will see a the hostname(s) sending data. If you click the hostname, and then click “Available Metrics”, you will see all of the different types of data you can monitor! There is a lot of variables here, but there are some basic stats that we’ll use to explore in this tutorial.
+Once scollector is running, assuming there are no firewalls preventing communication between the host and server on port 8070, Bosun should be getting statistics from the scollector running on the system. We can check this by going to http://docker-server-ip:8070/items. If you see a list of metrics, congratulations! You're now receiving data. At the bottom of the page (or in a second column if the web browser window is wide enough), you will see the hostname(s) sending data. If you click the hostname, and then click “Available Metrics”, you will see all of the different types of data you can monitor! There is a lot of variables here, but there are some basic stats that we’ll use to explore in this tutorial.
 
 ## Creating an Alert
 
 Collecting metrics about our systems is fun but what makes a monitoring system useful is alerting when anomalies arise. This is the real strength of Bosun.
 
-Bosun encourages a particular workflow that makes it easy to design, test, and deploy an alert. If you look at the top of the Bosun display, the tabs include Items, Graph, Expression, Rule, and Test config in left-to-right order. That's reflects the phases you go through as you create an alert. In general, first you'll select an item (metric) that is the basis of the alert. Next you'll graph it to understand its behavior. You'll then turn that graph into an expression, and the expression will be used to build a rule. You can then test the rule before incorporating it into Bosun.
+Bosun encourages a particular workflow that makes it easy to design, test, and deploy an alert. If you look at the top of the Bosun display, the tabs include Items, Graph, Expression, Rule, and Test config in left-to-right order; that reflects the phases you go through as you create an alert. In general, first you'll select an item (metric) that is the basis of the alert. Next you'll graph it to understand its behavior. You'll then turn that graph into an expression, and the expression will be used to build a rule. You can then test the rule before incorporating it into Bosun.
 
 Let's do an example to see how this works.In our example, we will setup an alert that notifies us about high cpu. The metric we'll focus on is "os.cpu". We will create an alert that triggers if a particular host has high CPU for an hour.
 
@@ -58,7 +58,7 @@ You should see the Graph tab with that metric pre-loaded and a graph displayed f
 
 Now that you have a graph, if you scroll to the bottom of the page there is a section called “Queries.” This section shows you the syntax of the query used to generate the graph.
 
-Also on the bottom of this page are links called "Expression" and "Rule". These take your current workspace and populate the Expression or Rule tabs respectively. The Expression tab lets us fine-tune the rule and is generally what you want to use. The Rule button skips the expression editor and takes directly to the rule editor.
+Also on the bottom of this page are links called "Expression" and "Rule". These take your current workspace and populate the Expression or Rule tabs respectively. The Expression tab lets us fine-tune the rule and is generally what you want to use. The Rule button skips the expression editor and takes you directly to the rule editor.
 
 For the purpose of this demo, click on the Expression button.
 
@@ -86,7 +86,7 @@ Change the alert in the box to this:
 
 	alert cpu.is.too.high {
 		template = test
-		$metric = q("sum:rate{counter,,1}:os.cpu{host=nyhq-winsvc01}", "1h", "")
+		$metric = q("sum:rate{counter,,1}:os.cpu{host=your-system-here}", "1h", "")
 		$avgcpu = avg($metric)
 		crit = $avgcpu > 80
 		warn = $avgcpu > 60
@@ -121,7 +121,7 @@ When you hit “test” after putting the above template into the template field
 
 ## Persisting your alert
 
-All of the steps thus far have been geared towards getting your feet wet with Bosun. At this point, you have an alert for high cpu that produces a rather nice-looking alert, but at this point Bosun isn’t going to alert on it. In order for the alert to be incorporated into bosun, it must be added to the config file. We can test the syntax of our alert and config file by going to the “Test Config” pane of Bosun, or navigate directly at http://your-docker-server:8070/config. Paste in your alert and template fields as shown above to the end of the config file and hit the test button. If Bosun says the config is valid, you are free to copy the config from that window and overwrite the existing docker.conf file with your new alert and template.
+All of the steps thus far have been geared towards getting your feet wet with Bosun. At this point, you have an alert for high cpu that produces a rather nice-looking alert, but at this point Bosun isn’t going to alert on it. In order for the alert to be incorporated into bosun, it must be added to the config file. We can test the syntax of our alert and config file by going to the “Test Config” pane of Bosun, or navigate directly at http://your-docker-server:8070/config. Paste in your alert and template fields as shown above to the end of the config file and hit the test button. If Bosun says the config is valid, you are free to copy the config from that window and overwrite the existing docker.conf file with your new alert and template.  To accomplish this, you may wish to install nsenter to start a shell inside the bosun docker container.  For more information, check out jpetazzo's nsenter repository at [https://github.com/jpetazzo/nsenter](https://github.com/jpetazzo/nsenter).  You'll find the docker.conf file at `/opt/bosun/docker.conf`.
 
 # scollector
 
@@ -133,7 +133,7 @@ Binaries are available for Linux, Windows, and Mac at [http://bosun.org/scollect
 
 scollector can be fed relevant information from the command line, however it is cleaner to provide scollector the information it needs in a config file, _scollector.conf_. In our case, the only thing we need to provide to scollector at this point is the hostname/ip address of the docker server where the Bosun container is running. If you wish to do this via the command line, the argument is **-h**. You can get complete help from scollector by using the **--help** argument. These two commands should be run as root:
 
-	$ echo "host=<docker-server-ip>:8070" >> /opt/scollector/scollector.conf
+	$ echo "host=docker-server-ip:8070" >> /opt/scollector/scollector.conf
 	$ /opt/scollector/scollector
 
 This will start scollector in foreground mode. If you’d like to run scollector in the background, you can start it as shown below. Until scollector has official packages for the various linux environments, the best way to start it at boot is via @reboot crontab or an entry in /etc/rc.local. Be aware that this below command should be run as root, so putting it into a crontab for a user will cause unexpected behavior.
