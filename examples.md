@@ -4,10 +4,10 @@ title: Examples
 order: 3
 ---
 
-{% raw %}
-
 * auto-gen TOC:
 {:toc}
+
+{% raw %}
 
 ## Basic Alerts
 
@@ -16,7 +16,7 @@ order: 3
 ####Rule
 In this alert we use the slim (session limit) metric and compare it to the current amount of sessions on each frontend. Because of this ability to combine metrics, we can easily create a percentage of utilization even though that metric doesn't exist in haproxy's csv stats.
 
-~~~
+{% highlight text %}
 alert haproxy_session_limit {
     macro = host_based
     template = generic
@@ -27,13 +27,12 @@ alert haproxy_session_limit {
     warn = $q > 80
     crit = $q > 95
 }
-~~~
+{% endhighlight %}
 
 ### Alert when something has *consistently* in a certain state for a period of time (Puppet has been left disabled)
 Some metrics represent bools, (0 for false, 1 for true). If we take a time series and run min on that, we know that has been in a false state for the entire duration. So the following lets us know if puppet has been left disabled for more than 24 hours:
 
-####Rule 
-
+####Rule
 ~~~
 alert puppet.left.disabled {
     macro = host_based
