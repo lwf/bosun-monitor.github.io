@@ -5,11 +5,11 @@ order: 1
 ---
 
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-4">
 		<h2>Bosun is an advanced open-source monitoring system</h2>
 			<p>It has been developed by <a href="https://twitter.com/mjibson">Matt Jibson</a> and <a href="https://twitter.com/kylembrandt">Kyle Brandt</a> at <a href="http://stackexchange.com/">Stack Exchange</a>.</p>
 	</div>
-	<div class="col-md-7">
+	<div class="col-md-8">
 		<img src="{{site.github.url}}/public/home_ss.png">
 	</div>
 </div>
