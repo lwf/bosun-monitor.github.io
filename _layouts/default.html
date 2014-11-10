@@ -64,7 +64,7 @@
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						{% assign pages_list = site.pages %}
-						{% for order in (1..site.pages.size) %}
+						{% for order in (2..site.pages.size) %}
 							{% for node in pages_list %}
 								{% if node.title != null and node.order == order %}
 									{% if node.layout == "page" %}
