@@ -79,6 +79,10 @@ Alerts can be in one of the following severity levels (From Highest to Lowest):
  * **Forget**: Make bosun forget about this instance of the alert. This is used on active unknown alerts. It is useful when something is not coming back (i.e. you have decommissioned a host). This act is non-destructive because if that data gets sent to bosun again everything will come back.
  * **History**: View a timeline of history for the selected alert instances
 
+#The Test Config Page
+The test configuration page shows the configuration that bosun started with. You can edit or paste a changed config to make sure there are no syntax errors before committing it and restarting bosun. Currently you have to handle your own configuration management, but in the future we may attempt to integrate this with git.
+
+
 
 
 {% endraw %}
