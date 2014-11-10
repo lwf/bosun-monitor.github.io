@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Screenshots
-order: 8
+order: 7
 ---
 
 {% raw %}

@@ -4,6 +4,9 @@ title: Getting Started
 order: 2
 ---
 
+* auto-gen TOC:
+{:toc}
+
 {% raw %}
 
 This document is written as a Quick-Start to getting Bosun working in your environment. By following this tutorial, you should have a fully operational Bosun system which not only is aggregating collected metrics from selected machines but also alerting you on relevant data about those systems.

@@ -1,7 +1,7 @@
 ---
 layout: page
-title: General Documentation
-order: 5
+title: Documentation
+order: 4
 ---
 
 {% raw %}

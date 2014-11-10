@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Examples
-order: 3
+order: 5
 ---
 
 {% raw %}
