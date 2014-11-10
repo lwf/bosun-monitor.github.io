@@ -29,7 +29,7 @@ alert haproxy_session_limit {
 }
 ~~~
 
-### Alert when something has *consistently* in a certain state for a period of time (Puppet has been left disabled)
+### Alert when something is *consistently* in a certain state for a period of time (Puppet has been left disabled)
 Some metrics represent bools, (0 for false, 1 for true). If we take a time series and run min on that, we know that has been in a false state for the entire duration. So the following lets us know if puppet has been left disabled for more than 24 hours:
 
 ####Rule 
