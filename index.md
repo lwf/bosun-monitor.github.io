@@ -19,7 +19,7 @@ order: 1
 			<div class="panel-heading"><h3>Features</h3></div>
 			<div class="panel-body">
 				<ul>
-					<li>An expression language for evaluating time series that allows for highly flexibile alerts to control alert noise</li>
+					<li>An expression language for evaluating time series data. You can now create highly flexible alerts and control noise</li>
 					<li>Templates for notifications that allow making alerts as detailed and informative as needed</li>
 					<li>An interface for testing alerts and templates to see if alerts would have triggered over a range of history before deploying the changes</li>
 					<li>High resolution metrics that never need to be rolled up that are stored in <a href="http://opentsdb.net/">OpenTSDB</a></li>
