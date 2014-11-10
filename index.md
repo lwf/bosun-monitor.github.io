@@ -4,7 +4,15 @@ title: Home
 order: 1
 ---
 
-Bosun is an open-source advanced monitoring system targeting site reliability engineers and professional system administrators. It has been developed by [Matt Jibson](https://twitter.com/mjibson) and [Kyle Brandt](https://twitter.com/kylembrandt) at [Stack Exchange](http://stackexchange.com/).
+<div class="row">
+	<div class="col-md-5">
+		<h2>Bosun is an advanced open-source monitoring system</h2>
+			<p>It has been developed by <a href="https://twitter.com/mjibson">Matt Jibson</a> and <a href="https://twitter.com/kylembrandt">Kyle Brandt</a> at <a href="http://stackexchange.com/">Stack Exchange</a>.</p>
+	</div>
+	<div class="col-md-7">
+		<img src="{{site.github.url}}/public/home_ss.png">
+	</div>
+</div>
 
 ###Features
 
@@ -16,8 +24,11 @@ Bosun is an open-source advanced monitoring system targeting site reliability en
 * Can run on any operating system which supports [Go](http://golang.org/) (which includes Windows and Linux)
 * Auto-detects new services and starts sending metrics immediately; properly designed alerts will also apply to these new services and allow for minimal maintenance on the side of the operator
 * Easily ingests metrics from services with a simple JSON/REST API so you can easily get application layer and business metrics into the system
-* Aggregation support so your monitoring need not be purely host-based (and you don't need to worry about aggregating metrics from multiple servers yourself)  
+* Aggregation support so your monitoring need not be purely host-based (and you don't need to worry about aggregating metrics from multiple servers yourself)
 
+### Go Try it!
+
+You can go try bosun easily using the docker image that comes with everything you need, just follow the [getting started guide]({{site.github.url}}/gettingstarted.html).
 
 ### Early Access Monitoring System  
 
