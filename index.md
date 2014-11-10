@@ -33,6 +33,6 @@ You can go try bosun easily using the docker image that comes with everything yo
 ### Early Access Monitoring System  
 
 *Get instant access and start .. monitoring; get involved with this monitoring system as it develops.*  
-*Note: This Early Access monitoring system may or may not change significantly over the course of development. If you are not excited to play with this monitoring system in its current state, then you may want to wait until the ga...monitoring system progresses further in development.*
+*Note: This Early Access monitoring system may or may not change significantly over the course of development. If you are not excited to play with this monitoring system in its current state, then you may want to wait until the monitoring system progresses further in development.*
 
-Bosun is already practically very useful to us, and we are relying on it more and more at Stack Exchange. However, we want Bosun to be a general monitoring solution, and therefore we are depending on the creativity and experience of our users to start to influence it's design at this point. This means we want to be able to go back and make changes that may break existing configuration. Also we are still updating Bosun regularly so there may be regressions from time to time. 
+Bosun is already practically very useful to us, and we are relying on it more and more at Stack Exchange. However, we want Bosun to be a general monitoring solution, and therefore we are depending on the creativity and experience of our users to start to influence its design at this point. This means we want to be able to go back and make changes that may break existing configuration. Also we are still updating Bosun regularly so there may be regressions from time to time. 
