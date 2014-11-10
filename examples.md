@@ -11,7 +11,7 @@ order: 3
 
 ## Basic Alerts
 
-### Combing Two Metrics (HAProxy Connections near Session Limit)
+### Combining Two Metrics (HAProxy Connections near Session Limit)
 
 ####Rule
 In this alert we use the slim (session limit) metric and compare it to the current amount of sessions on each frontend. Because of this ability to combine metrics, we can easily create a percentage of utilization even though that metric doesn't exist in haproxy's csv stats.
