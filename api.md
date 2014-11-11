@@ -84,10 +84,6 @@ Get latest values of all metadata. Optional parameters:
 * **tagk** and **tagv** pairs: filter by tag values; must be correctly paired;
 many supported. Ex: `/api/metadata/get?tagk=key1&tagv=val1&tagk=key2&tagv=val2`.
 
-## Data Send Endpoints
-
-
-
 ## Expression, Rule, and Graph Endpoints
 
 ### /api/expr?q={expression}
