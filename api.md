@@ -53,6 +53,10 @@ base64-encoded data should be encoded using the standard (not URL) encoding
 All Search endpoints return a sorted json array. The search data is populated by
 observing data that has been relayed through the instance of bosun.
 
+### /api/host
+
+Returns dashboard-ready data for all hosts.
+
 ### /api/metric
 
 Returns the metrics that have been relayed through bosun.
@@ -83,6 +87,10 @@ Get latest values of all metadata. Optional parameters:
 * **metric**: filter by metric name. Ex: `/api/metadata/get?metric=os.cpu`.
 * **tagk** and **tagv** pairs: filter by tag values; must be correctly paired;
 many supported. Ex: `/api/metadata/get?tagk=key1&tagv=val1&tagk=key2&tagv=val2`.
+
+### /api/metadata/metrics
+
+Get unit, type (rate, gauge, counter) and description information for metrics.
 
 ## Expression, Rule, and Graph Endpoints
 
