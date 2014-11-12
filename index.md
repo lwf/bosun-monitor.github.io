@@ -23,7 +23,7 @@ order: 1
 					<li>Templates for notifications that allow making alerts as detailed and informative as needed</li>
 					<li>An interface for testing alerts and templates to see if alerts would have triggered over a range of history before deploying the changes</li>
 					<li>High resolution metrics that never need to be rolled up that are stored in <a href="http://opentsdb.net/">OpenTSDB</a></li>
-					<li>Is bundled with a metric collector called <a href="http://bosun.org/scollector/">scollector</a> that treats both Linux and Windows as first-class systems and call also poll SNMP devices such as Cisco; running this collector provides you with a rich library of metrics from day 1</li>
+					<li>Is bundled with a metric collector called <a href="http://bosun.org/scollector/">scollector</a> that treats both Linux and Windows as first-class systems and can also poll SNMP devices such as Cisco; running this collector provides you with a rich library of metrics from day 1</li>
 					<li>Runs on any operating system which supports <a href="http://golang.org/">Go</a> (Windows and Linux supported)</li>
 					<li>Auto-detects new services and starts sending metrics immediately; properly designed alerts will also apply to these new services and allow for minimal maintenance on the side of the operator</li>
 					<li>Easily ingests metrics from services with a simple JSON API so you can easily get application-layer and business metrics into the system</li>
