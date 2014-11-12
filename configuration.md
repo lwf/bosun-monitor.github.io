@@ -108,6 +108,7 @@ Templates are the message body for emails that are sent when an alert is trigger
 * GraphAll(string): returns an SVG graph of the expression
 * LeftJoin(expr, expr[, expr...]): results of the first expression (which may be a string or an expression) are left joined to results from all following expressions.
 * Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
+* LookupAll("table", "key", "tag=val,tag2=val2"): Looks up the value for the key based on the tagset specified in the given lookup table
 
 Global template functions:
 
