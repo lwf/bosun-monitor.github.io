@@ -134,13 +134,14 @@ Binaries are available for Linux, Windows, and Mac at [http://bosun.org/scollect
 
 ## Configuring scollector
 
-scollector can be fed relevant information from the command line, however it is cleaner to provide scollector the information it needs in a config file, _scollector.conf_. In our case, the only thing we need to provide to scollector at this point is the hostname/ip address of the docker server where the Bosun container is running. If you wish to do this via the command line, the argument is **-h**. You can get complete help from scollector by using the **--help** argument. These two commands should be run as root:
+`scollector` can be configured to send to a bosun server by specifying a host with the **-h** flag:
 
-	$ echo "host=docker-server-ip:8070" >> /opt/scollector/scollector.conf
-	$ /opt/scollector/scollector
+	$ scollector -h docker-server-ip:8070
 
-This will start scollector in foreground mode. If you’d like to run scollector in the background, you can start it as shown below. Until scollector has official packages for the various linux environments, the best way to start it at boot is via @reboot crontab or an entry in /etc/rc.local. Be aware that this below command should be run as root, so putting it into a crontab for a user will cause unexpected behavior.
+You may instead create a `scollector.conf` file alongside the scollector binary with the following contents:
 
-	$ /opt/scollector/scollector >> /var/log/scollector.log 2>&1 &
+	host=docker-server-ip:8070
+
+See the [scollector docs](http://godoc.org/github.com/bosun-monitor/scollector) for more information.
 
 {% endraw %}
