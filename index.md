@@ -46,15 +46,15 @@ order: 1
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
 		<h2>Installation</h2>
+		<p>Binaries are provided below. All web assets are already bundled. Source instructions provided for developers.</p>
 		<ul>
 			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-linux-amd64"><strong>Linux</strong> amd64</a></li>
 			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-windows-amd64.exe"><strong>Windows</strong> amd64</a></li>
 			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-darwin-amd64"><strong>Mac</strong> amd64</a></li>
 		</ul>
 
-		<h3>From Source</h3>
+		<h4>From Source</h4>
 		<code>$ go get github.com/bosun-monitor/bosun</code>
-		<p>(All web assets are already bundled.)</p>
 	</div>
 </div>
 <div class="row">
