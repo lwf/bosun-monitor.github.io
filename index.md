@@ -45,7 +45,7 @@ order: 1
 </div>
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
-		<h2>Installation</h2>
+		<h2 id="installation">Installation</h2>
 		<p>Binaries are provided below. All web assets are already bundled. Source instructions provided for developers.</p>
 		<ul>
 			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-linux-amd64"><strong>Linux</strong> amd64</a></li>
