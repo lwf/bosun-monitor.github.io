@@ -41,7 +41,6 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * squelch: see [alert squelch](#squelch)
 * stateFile: bosun state file, defaults to `bosun.state`
 * unknownTemplate: name of the template for unknown alerts
-* webDir: directory with template and static assets, defaults to `web`
 
 ### macro
 
