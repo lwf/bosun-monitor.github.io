@@ -45,8 +45,22 @@ order: 1
 </div>
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
+		<h2>Installation</h2>
+		<ul>
+			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-linux-amd64"><strong>Linux</strong> amd64</a></li>
+			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-windows-amd64.exe"><strong>Windows</strong> amd64</a></li>
+			<li><a href="https://github.com/bosun-monitor/bosun/releases/download/{{site.version.id}}/bosun-darwin-amd64"><strong>Mac</strong> amd64</a></li>
+		</ul>
+
+		<h3>From Source</h3>
+		<code>$ go get github.com/bosun-monitor/bosun</code>
+		<p>(All web assets are already bundled.)</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-1 col-md-10">
 		<h2>Alpha</h2>
-		<p>Bosun is an alpha. It has bugs and its functionality will change. We will maintain an errata page detailing breaking changes going forward. Be aware of these problems if you plan to use it for production work.</p>
+		<p>Bosun is in alpha. It has bugs and its functionality will change. We will maintain an errata page detailing breaking changes going forward. Be aware of these problems if you plan to use it for production work.</p>
 		<p>However, Bosun is already useful to us, and we are relying on it more and more at Stack Exchange. We want Bosun to be a general monitoring solution, and therefore we are depending on the creativity and experience of our users to influence its design. This means we will make changes that may break existing configuration.</p>
 	</div>
 </div>
