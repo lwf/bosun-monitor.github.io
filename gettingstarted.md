@@ -11,25 +11,25 @@ order: 2
 
 This document is written as a Quick-Start to getting Bosun working in your environment. By following this tutorial, you should have a fully operational Bosun system which not only is aggregating collected metrics from selected machines but also alerting you on relevant data about those systems.
 
-# Assumptions
+# Bosun
 
-The only assumption made in this document is that the reader has a system capable of running Docker.
+This guide is based on using our docker image. For those that do not wish to use docker, we provide binaries for bosun at bosun.org, but you will also need to install OpenTSDB and HBase yourself.
 
-# Procedure
+## Docker
 
-## Install Docker
+### Install Docker
 
 If you do not already have docker installed on your system, you can install it following the instructions outlined in [https://docs.docker.com/installation/](https://docs.docker.com/installation/).
 
 **Note:** Don’t forget to ensure the docker daemon is running before moving forward!
 
-## Installing Bosun
+### Installing Bosun
 
 Once Docker is installed, you will want to pull the latest version of Bosun from the Docker Registry. To do this, execute the following command:
 
-	$ docker run -d -p 4242:4242 -p 8070:8070 stackexchange/bosun
+	$ docker run -d -p 8070:8070 stackexchange/bosun
 
-The above command tells the Docker daemon that you would like to start a new daemonized instance of bosun and you wish to port-forward 4242 and 8070 of your server into the docker container. After about 15 seconds, you should have a working Bosun instance on port 8070. You can navigate to the instance by opening a browser and heading to http://docker-server:8070 where docker-server is your server running the docker daemon.
+The above command tells the Docker daemon that you would like to start a new daemonized instance of bosun and you wish to port-forward 8070 of your server into the docker container. After about 15 seconds, you should have a working Bosun instance on port 8070. You can navigate to the instance by opening a browser and heading to http://docker-server:8070 where docker-server is your server running the docker daemon.
 
 ## Getting data into Bosun
 
