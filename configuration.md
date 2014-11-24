@@ -41,6 +41,13 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * stateFile: bosun state file, defaults to `bosun.state`
 * unknownTemplate: name of the template for unknown alerts
 
+#### SMTP Authentication
+
+These optional fields, if either is specified, will authenticate with the SMTP server
+
+* smtpUsername: SMTP username
+* smtpPassword: SMTP password
+
 ### macro
 
 Macros are sections that can define anything (including variables). It is not an error to reference an unknown variable in a macro. Other sections can reference the macro with `macro = name`. The macro's data will be expanded with the current variable definitions and inserted at that point in the section. Multiple macros may be thus referenced at any time. Macros may reference other macros. For example:
