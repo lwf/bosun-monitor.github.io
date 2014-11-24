@@ -27,7 +27,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 
 #### Required
 
-* tsdbHost: OpenTSDB relay destination
+* tsdbHost: OpenTSDB relay destination. Should specify both host and port: `tsdb-host:4242`. Defaults to port 80 if no port specified.
 
 #### Optional
 
