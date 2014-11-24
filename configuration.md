@@ -35,7 +35,6 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * emailFrom: from address for notification emails, required for email notifications
 * httpListen: HTTP listen address, defaults to `:8070`
 * ping: if present, will ping all values tagged with host
-* relayListen: OpenTSDB relay listen address, defaults to `:4242`
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
 * smtpHost: SMTP server, required for email notifications
 * squelch: see [alert squelch](#squelch)
