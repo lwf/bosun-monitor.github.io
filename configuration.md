@@ -34,6 +34,7 @@ Globals are all key=value pairs not in a section. These are generally placed at 
 * checkFrequency: time between alert checks, defaults to `5m`
 * emailFrom: from address for notification emails, required for email notifications
 * httpListen: HTTP listen address, defaults to `:8070`
+* hostname: when generating links in templates, use this value as the hostname instead of using the system's hostname
 * ping: if present, will ping all values tagged with host
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
 * smtpHost: SMTP server, required for email notifications
