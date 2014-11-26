@@ -9,7 +9,7 @@ order: 1
 		<div class="jumbotron">
 			<h1>Bosun</h1>
 			<p>An advanced, open-source monitoring and alerting system by <a href="http://stackexchange.com">Stack Exchange</a></p>
-			<p><a class="btn btn-primary btn-lg" href="{{site.github.url}}/gettingstarted.html">Get Started</a></p>
+			<p><a class="btn btn-primary btn-lg" href="{{site.github.url}}/quickstart.html">Quick Start</a></p>
 		</div>
 	</div>
 </div>
