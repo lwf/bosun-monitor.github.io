@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Getting Started
+title: Quick Start
 order: 2
 ---
 
