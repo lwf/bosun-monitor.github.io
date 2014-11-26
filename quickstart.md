@@ -2,6 +2,7 @@
 layout: page
 title: Quick Start
 order: 2
+redirect_from: /gettingstarted.html
 ---
 
 * auto-gen TOC:

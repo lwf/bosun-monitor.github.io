@@ -1,3 +1,5 @@
 version:
   hash: "bc4a2fce2d2bdb601b201df819571120907a0dd3"
   id: 20141120204702
+gems:
+  - jekyll-redirect-from
