@@ -18,21 +18,22 @@ import (
 
 func main() {
 	id := time.Now().UTC().Format("20060102150405")
+	base := filepath.Join(os.Getenv("GOPATH"), "src", "bosun.org")
+	os.Chdir(base)
 	rev, err := exec.Command("git", "rev-parse", "HEAD").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
 	hash := fmt.Sprintf(`"%s"`, strings.TrimSpace(string(rev)))
-	rewrite("bosun", id, hash)
-	rewrite("scollector", id, hash)
+	rewrite("bosun", id, hash, base)
+	rewrite("scollector", id, hash, base)
 
 	fmt.Printf("version:\n  hash: %s\n  id: %s\n", hash, id)
 }
 
-func rewrite(name, id, hash string) {
-	bosundir := filepath.Join(os.Getenv("GOPATH"), "src", "bosun.org", "cmd", name)
-	os.Chdir(bosundir)
-	path := filepath.Join(bosundir, "main.go")
+func rewrite(name, id, hash, base string) {
+	cmdir := filepath.Join(base, "cmd", name)
+	path := filepath.Join(cmdir, "main.go")
 	mainfile, err := os.OpenFile(path, os.O_RDWR, 0660)
 	if err != nil {
 		log.Fatal(err)
