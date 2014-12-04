@@ -143,6 +143,6 @@ You may instead create a `scollector.conf` file alongside the scollector binary 
 
 	host=docker-server-ip:8070
 
-See the [scollector docs](http://godoc.org/github.com/bosun-monitor/scollector) for more information.
+See the [scollector docs](http://godoc.org/bosun.org/cmd/scollector) for more information.
 
 {% endraw %}
