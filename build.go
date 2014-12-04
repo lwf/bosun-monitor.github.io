@@ -1,5 +1,3 @@
-// Build sets scollector version information and should be run from the
-// scollector directory.
 package main
 
 import (
@@ -19,7 +17,20 @@ import (
 )
 
 func main() {
-	bosundir := filepath.Join(os.Getenv("GOPATH"), "src", "github.com", "bosun-monitor", "bosun")
+	id := time.Now().UTC().Format("20060102150405")
+	rev, err := exec.Command("git", "rev-parse", "HEAD").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	hash := fmt.Sprintf(`"%s"`, strings.TrimSpace(string(rev)))
+	rewrite("bosun", id, hash)
+	rewrite("scollector", id, hash)
+
+	fmt.Printf("version:\n  hash: %s\n  id: %s\n", hash, id)
+}
+
+func rewrite(name, id, hash string) {
+	bosundir := filepath.Join(os.Getenv("GOPATH"), "src", "bosun.org", "cmd", name)
 	os.Chdir(bosundir)
 	path := filepath.Join(bosundir, "main.go")
 	mainfile, err := os.OpenFile(path, os.O_RDWR, 0660)
@@ -28,7 +39,6 @@ func main() {
 	}
 	defer mainfile.Close()
 
-	var hash, id string
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, path, mainfile, parser.ParseComments)
 	if err != nil {
@@ -61,14 +71,8 @@ func main() {
 
 			switch spec.Names[0].Name {
 			case "VersionDate":
-				id = time.Now().UTC().Format("20060102150405")
 				value.Value = id
 			case "VersionID":
-				rev, err := exec.Command("git", "rev-parse", "HEAD").Output()
-				if err != nil {
-					log.Fatal(err)
-				}
-				hash = fmt.Sprintf(`"%s"`, strings.TrimSpace(string(rev)))
 				value.Value = hash
 			}
 		}
@@ -87,6 +91,4 @@ func main() {
 	if _, err := io.Copy(mainfile, &buf); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("version:\n  hash: %s\n  id: %s\n", hash, id)
 }

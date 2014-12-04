@@ -2,7 +2,7 @@
 
 set -e
 
-go get -d github.com/bosun-monitor/bosun
+go get -d -v bosun.org/cmd/bosun
 go run build.go > _config.yml
 cat _config.yml
 
@@ -14,7 +14,8 @@ for GOOS in windows linux darwin; do
 	for GOARCH in amd64 386; do
 		export GOOS=$GOOS
 		export GOARCH=$GOARCH
-		echo $GOOS $GOARCH $EXT
-		go build -o bosun-$GOOS-$GOARCH$EXT github.com/bosun-monitor/bosun
+		echo $GOOS $GOARCH
+		go build -o bosun-$GOOS-$GOARCH$EXT bosun.org/cmd/bosun
+		go build -o scollector-$GOOS-$GOARCH$EXT bosun.org/cmd/scollector
 	done
 done
