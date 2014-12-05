@@ -397,7 +397,7 @@ Returns the value from the series at the percentile p. Min and Max can be simula
 
 #### since(series)
 
-Returns the number of seconds since the latest data point not more than duration old. Same duration caveat as the `recent()` function.
+Returns the number of seconds since the latest data point not more than duration old.
 
 #### sum(series)
 
