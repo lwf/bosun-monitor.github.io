@@ -115,6 +115,7 @@ Templates are the message body for emails that are sent when an alert is trigger
 * LeftJoin(expr, expr[, expr...]): results of the first expression (which may be a string or an expression) are left joined to results from all following expressions.
 * Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
 * LookupAll("table", "key", "tag=val,tag2=val2"): Looks up the value for the key based on the tagset specified in the given lookup table
+* HTTPGet("url"): Performs an http get and returns the raw text of the url
 
 Global template functions:
 
@@ -479,6 +480,10 @@ Returns the input with its group removed. Used to combine queries from two diffe
 #### abs(number)
 
 Returns the absolute value of the number.
+
+#### d(string)
+
+Returns the number of seconds of the [opentsdb duration string](http://opentsdb.net/docs/build/html/user_guide/query/dates.html).
 
 #### dropna(series)
 
