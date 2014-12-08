@@ -9,7 +9,7 @@ order: 1
 		<div class="jumbotron">
 			<h1>Bosun</h1>
 			<p>An advanced, open-source monitoring and alerting system by <a href="http://stackexchange.com">Stack Exchange</a></p>
-			<p><a class="btn btn-primary btn-lg" href="{{site.github.url}}/quickstart.html">Quick Start</a></p>
+			<p><a class="btn btn-primary btn-lg" href="/quickstart.html">Quick Start</a></p>
 		</div>
 	</div>
 </div>
@@ -37,8 +37,8 @@ order: 1
 	<div class="col-md-offset-1 col-md-10">
 		<p>
 		<h2>Screenshot</h2>
-		<a href="{{site.github.url}}/public/ss_rule_timeline.png">
-			<img class="col-sm-12" src="{{site.github.url}}/public/ss_rule_timeline.png">
+		<a href="/public/ss_rule_timeline.png">
+			<img class="col-sm-12" src="/public/ss_rule_timeline.png">
 		</a>
 		</p>
 	</div>
