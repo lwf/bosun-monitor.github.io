@@ -350,7 +350,7 @@ Diff returns the last point of the series minus the first point.
 
 #### q(query, startDuration, endDuration)
 
-Generic query from endDuration to startDuration ago. If endDuration is the empty string (`""`), now is used. Support duration units are listed in [the docs](http://opentsdb.net/docs/build/html/user_guide/query/dates.html). Refer to [the docs](http://opentsdb.net/docs/build/html/user_guide/query/index.html) for query syntax. The query argument is the value part of the `m=...` expressions. `*` and `|` are fully supported. In addition, queries like `sys.cpu.user{host=ny-*}` are supported. These are performed by an additional step which determines valid matches, and replaces `ny-*` with `ny-web01|ny-web02|...|ny-web10` to achieve the same result. This lookup is kept in memory by the system and does not incur any additional OpenTSDB API requests, but does require tcollector instances pointed to the bosun server.
+Generic query from endDuration to startDuration ago. If endDuration is the empty string (`""`), now is used. Support d( units are listed in [the docs](http://opentsdb.net/docs/build/html/user_guide/query/dates.html). Refer to [the docs](http://opentsdb.net/docs/build/html/user_guide/query/index.html) for query syntax. The query argument is the value part of the `m=...` expressions. `*` and `|` are fully supported. In addition, queries like `sys.cpu.user{host=ny-*}` are supported. These are performed by an additional step which determines valid matches, and replaces `ny-*` with `ny-web01|ny-web02|...|ny-web10` to achieve the same result. This lookup is kept in memory by the system and does not incur any additional OpenTSDB API requests, but does require tcollector instances pointed to the bosun server.
 
 ### Reduction Functions
 
@@ -483,7 +483,7 @@ Returns the absolute value of the number.
 
 #### d(string)
 
-Returns the number of seconds of the [opentsdb duration string](http://opentsdb.net/docs/build/html/user_guide/query/dates.html).
+Returns the number of seconds of the [OpenTSDB duration string](http://opentsdb.net/docs/build/html/user_guide/query/dates.html).
 
 #### dropna(series)
 
