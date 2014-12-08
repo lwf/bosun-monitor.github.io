@@ -57,7 +57,7 @@ order: 1
 		</ul>
 
 		<h4>From Source</h4>
-		<code>$ go get github.com/bosun-monitor/bosun</code>
+		<code>$ go get bosun.org/cmd/bosun</code>
 	</div>
 </div>
 <div class="row">
