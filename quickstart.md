@@ -14,7 +14,7 @@ This document is written as a Quick-Start to getting Bosun working in your envir
 
 # Bosun
 
-This guide is based on using our docker image. For those that do not wish to use docker, we provide binaries for bosun at bosun.org, but you will also need to install OpenTSDB and HBase yourself. (If you install OpenTSDB yourself, we recommond using the [next branch](https://github.com/opentsdb/opentsdb/tree/next), which has support for GZIP connections used by scollector.)
+This guide is based on using our docker image. For those that do not wish to use docker, we provide binaries for bosun at bosun.org, but you will also need to install OpenTSDB and HBase yourself. (If you install OpenTSDB yourself, we recommend using the [next branch](https://github.com/opentsdb/opentsdb/tree/next), which has support for GZIP connections used by scollector.)
 
 ## Docker
 
