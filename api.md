@@ -19,7 +19,7 @@ For metrics and tags to appear in bosun's search boxes, the data must be correct
 
 Metadata (units, gauge/rate/counter, description, etc.) can be POST'd to the `/api/metadata/put` endpoint, with the request body as a JSON list of objects. The objects have the following properties:
 
-* **Metric** (string): metric name
+* **Metric** (string, optional): metric name
 * **Tags** (object, optional): key=value tag pairs
 * **Name** (string): metadata key name, for example: `desc`, `rate`, `unit`
 * **Value** (string): metadata value
