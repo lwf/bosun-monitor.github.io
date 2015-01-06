@@ -224,7 +224,6 @@ template diskspace {
     <br>Total: {{.Eval .Alert.Vars.total | bytes}}
     <br>Est. {{.Eval .Alert.Vars.days_to_zero | printf "%.2f"}} days remain until 0% free space
     {{/* .Graph .Alert.Vars.percent_free_graph */}}
-    {{/* What is below can be replaced by the below once https://github.com/bosun-monitor/bosun/issues/348 is fixed */}}
     {{printf "q(\"avg:1h-min:os.disk.fs.percent_free{host=%s,disk=%s}\", \"7d\", \"\")" .Group.host .Group.disk | .Graph}}
     `
     subject = {{.Last.Status}}: Diskspace: ({{.Alert.Vars.used | .Eval | bytes}}/{{.Alert.Vars.total | .Eval | bytes}}) {{.Alert.Vars.percent_free | .Eval | printf "%.2f"}}% Free on {{.Group.host}}:{{.Group.disk}} (Est. {{.Eval .Alert.Vars.days_to_zero | printf "%.2f"}} days remain)
