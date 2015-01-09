@@ -24,13 +24,11 @@ Environment variables may be used similarly to variables, but with `env.` precee
 ### globals
 
 Globals are all key=value pairs not in a section. These are generally placed at the top of the file.
+Every variable is optional, though you should enable at least 1 backend.
 
-#### Required
 
 * tsdbHost: OpenTSDB host. Must be GZIP-aware (use the [next branch](https://github.com/opentsdb/opentsdb/tree/next)). Can specify both host and port: `tsdb-host:4242`. Defaults to port 4242 if no port specified.
-
-#### Optional
-
+* graphiteHost: Graphite Host. Same format as tsdbHost, defaults to port 2003.
 * checkFrequency: time between alert checks, defaults to `5m`
 * emailFrom: from address for notification emails, required for email notifications
 * httpListen: HTTP listen address, defaults to `:8070`
@@ -319,6 +317,33 @@ Data types:
 
 * scalar: a numeric value; not paired with a timestamp
 * series: an array of timestamp-value pairs
+
+### Graphite Query Functions
+
+#### GraphiteQuery(query, startDuration, endDuration, format)
+
+Performs a graphite query.  the duration format is the internal bosun format (which happens to be the same as OpenTSDB's format).
+Functions pretty much the same as q() (see that for more info) but for graphite.
+The format string lets you annotate how to parse series as returned by graphite, as to yield tags in the format that bosun expects.
+The tags are dot-separated and the amount of "nodes" (dot-separated words) should match what graphite returns.
+Irrelevant nodes can be left empty.
+
+For example:
+
+`groupByNode(collectd.*.cpu.*.cpu.idle,1,'avg')`
+
+returns series named like `host1`, `host2` etc, in which case the format string can simply be `host`.
+
+`collectd.web15.cpu.*.cpu.*`
+
+returns series named like `collectd.web15.cpu.3.idle`, requiring a format like  `.host..core..cpu_type`.
+
+For advanced cases, you can use graphite's alias(), aliasSub(), etc to compose the exact parseable output format you need.
+This happens when the outer graphite function is something like "avg()" or "sum()" in which case graphite's output series will be identified as "avg(some.string.here)".
+
+#### GraphiteBand(query, duration, period, format, num)
+
+Like band() but for graphite queries.
 
 ### OpenTSDB Query Functions
 
