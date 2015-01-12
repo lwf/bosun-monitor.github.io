@@ -26,9 +26,13 @@ Environment variables may be used similarly to variables, but with `env.` precee
 Globals are all key=value pairs not in a section. These are generally placed at the top of the file.
 Every variable is optional, though you should enable at least 1 backend.
 
+#### backends
 
 * tsdbHost: OpenTSDB host. Must be GZIP-aware (use the [next branch](https://github.com/opentsdb/opentsdb/tree/next)). Can specify both host and port: `tsdb-host:4242`. Defaults to port 4242 if no port specified.
-* graphiteHost: Graphite Host. Same format as tsdbHost, defaults to port 2003.
+* graphiteHost: Graphite host. Same format as tsdbHost.
+
+#### settings
+
 * checkFrequency: time between alert checks, defaults to `5m`
 * emailFrom: from address for notification emails, required for email notifications
 * httpListen: HTTP listen address, defaults to `:8070`
