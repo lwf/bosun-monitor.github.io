@@ -30,6 +30,7 @@ Every variable is optional, though you should enable at least 1 backend.
 
 * tsdbHost: OpenTSDB host. Must be GZIP-aware (use the [next branch](https://github.com/opentsdb/opentsdb/tree/next)). Can specify both host and port: `tsdb-host:4242`. Defaults to port 4242 if no port specified.
 * graphiteHost: Graphite host. Same format as tsdbHost.
+* logstashElasticHost: Elasticsearch host populated by logstash. Same format as tsdbHost.
 
 #### settings
 
@@ -118,6 +119,8 @@ Templates are the message body for emails that are sent when an alert is trigger
 * Lookup("table", "key"): Looks up the value for the key based on the tagset of the alert in the specified lookup table
 * LookupAll("table", "key", "tag=val,tag2=val2"): Looks up the value for the key based on the tagset specified in the given lookup table
 * HTTPGet("url"): Performs an http get and returns the raw text of the url
+* LSQuery("indexRoot", "filterString", "startDuration", "endDuration", nResults). Returns an array of a length up to nResults of Marshaled Json documents (Go: marshaled to interface{}). This is like the lscount and lsstat functions. There is no `keyString` because the group (aka tags) if the alert is used.
+* LSQueryAll("indexRoot", "keyString" filterString", "startDuration", "endDuration", nResults). Like LSQuery but you have to specify the `keyString` since it is not scoped to the alert.
 
 Global template functions:
 
@@ -348,6 +351,29 @@ This happens when the outer graphite function is something like "avg()" or "sum(
 #### GraphiteBand(query, duration, period, format, num)
 
 Like band() but for graphite queries.
+
+### Logstash Query Functions
+
+#### lscount(indexRoot, keyString, filterString, bucketDuration, startDuration, endDuration)
+
+lscount returns the per second rate of matching log documents.
+
+  * `indexRoot` is the root name of the index to hit, the format is expected to be `fmt.Sprintf("%s-%s", index_root, d.Format("2006.01.02"))`.
+  * `keyString` creates groups (like tagsets) and can also filter those groups. It is the format of `"field:regex,field:regex..."` The `:regex` can be ommited.
+  * `filterString` is an Elastic regexp query that can be applied to any field. It is in the same format as the keystring argument.
+  * `bucketDuration` is in the same format is an opentsdb duration, and is the size of buckets returned (i.e. counts for every 10 minutes). In the case of lscount, that number is normalized to a per second rate by dividing the result by the number of seconds in the duration.
+  * `startDuration` and `endDuration` set the time window from now - see the OpenTSDB q() function for more details.
+
+#### lsstat(indexRoot, keyString, filterString, field, rStat, bucketDuration, startDuration, endDuration)
+
+lstat returns various summary stats per bucket for the specified `field`. The field must be numeric in elastic. rStat can be one of `avg`, `min`, `max`, `sum`, `sum_of_squares`, `variance`, `std_deviation`. The rest of the fields behave the same as lscount except that there is no division based on `bucketDuration` since these are summary stats.
+
+#### Caveats:
+  * There is currently no escaping in the keystring, so if you regex needs to have a comma or double quote you are out of luck.
+  * The regexs in keystring are applied twice. First as a regexp filter to elastic, and then as a go regexp to the keys of the result. This is because the value could be an array and you will get groups that should be filtered. This means regex language is the intersection of the golang regex spec and the elastic regex spec.
+  * If the type of the field value in Elastic (aka the mapping) is a number then the regexes won't act as a regex. The only thing you can do is an exact match on the number, ie "eventlogid:1234". It is recommended that anything that is a identifier should be stored as a string since they are not numbers even if they are made up entirely of numerals.
+  * As of January 15, 2015 - logstash functionality is new so these functions may change a fair amount based on experience using them in alerts.
+  * Alerts using this information likely want to set ignoreUnknown, since only "groups" that appear in the time frame are in the results.
 
 ### OpenTSDB Query Functions
 
