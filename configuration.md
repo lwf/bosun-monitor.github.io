@@ -40,6 +40,7 @@ Every variable is optional, though you should enable at least 1 backend.
 * hostname: when generating links in templates, use this value as the hostname instead of using the system's hostname
 * ping: if present, will ping all values tagged with host
 * responseLimit: number of bytes to limit OpenTSDB responses, defaults to 1MB (`1048576`)
+* searchSince: duration of time to filter by during certain searches, defaults to `3d`; currently used by the hosts list on the items page
 * smtpHost: SMTP server, required for email notifications
 * squelch: see [alert squelch](#squelch)
 * stateFile: bosun state file, defaults to `bosun.state`
