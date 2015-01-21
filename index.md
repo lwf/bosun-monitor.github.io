@@ -45,6 +45,13 @@ order: 1
 </div>
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
+		<h2>Support</h2>
+		<p>We have a chat room at Stack Exchange for Bosun support: <a href="http://chat.stackoverflow.com/rooms/67157/bosun">http://chat.stackoverflow.com/rooms/67157/bosun</a>.</p>
+		<p>Or you can open <a href="https://github.com/bosun-monitor/bosun/issues">an issue on GitHub</a>.</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-offset-1 col-md-10">
 		<h2 id="installation">Installation</h2>
 		<p>Binaries are provided below. All web assets are already bundled. Source instructions provided for developers.</p>
 		<ul>
