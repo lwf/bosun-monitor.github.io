@@ -149,6 +149,65 @@ template header {
 
 ~~~
 
+### Verifying and graphing per-host and aggregate available cpu capacity, using Graphite.
+
+This rule checks the current cpu capacity (avg per core, for the last 5 minutes), for each host in a cluster.
+
+We warn if more than 80% of systems have less than 20% capacity available, or if there's less than 200% in total in the cluster, irrespective of how many hosts there are and where the spare capacity is. Critical is for 90% and 50% respectively.
+
+By checking a value that scales along with the size of the cluster, and one that puts an absolute lower limit, we can cover more ground.  But this is of course specific to the context of the environment and usage patterns.  Note that via groupByNode() the timeseries as returned by Graphite only have the hostname in them.
+
+To provide a bit more context to the operator, we also plot the last 10 hours on a graph in the alert
+![Notification for per-host and aggregate idle cpu](public/cpu_idle_graph_graphite.png)
+
+#### Rule
+
+~~~
+alert os.cpu.idle.web {
+    template = os_cpu_idle_web
+    $expr = "groupByNode(collectd.dc1-web*.cpu.*.cpu.idle,1,'avg')"
+    $idle_series_by_host = graphite($expr, "5m", "", "host")
+    $idle_series_by_host_historical = graphite($expr, "10h", "", "host")
+    $idle_by_host = avg($idle_series_by_host)
+    $num_hosts = len(t($idle_by_host, ""))
+    $idle_total= sum(t($idle_by_host, ""))
+
+    $hosts_low = t($idle_by_host < 20, "")
+    $num_hosts_low = sum($hosts_low)
+    $ratio_hosts_low = ($num_hosts_low / $num_hosts)
+
+    warn = ($ratio_hosts_low > 0.8) || ($idle_total < 200)
+    crit = ($ratio_hosts_low > 0.9) || ($idle_total < 50)
+}
+~~~
+
+#### Template
+
+~~~
+template os_cpu_idle_web {
+    body = `<a href="{{.Ack}}">Acknowledge alert</a>
+    <br>
+    <br>
+    <b>Cpu idle by host:</b>
+    <table>
+    {{range $f := .EvalAll .Alert.Vars.idle_by_host}}
+        <tr><td>{{ $f.Group.host}}</td>
+        {{if lt $f.Value 20.0}}
+            <td style="color: red;">
+            {{else}}
+                <td style="color: green;">
+            {{end}}
+        {{ $f.Value | printf "%.0f" }}</td></tr>
+    {{end}}
+    <tr><td><b>Total</b></td><td>{{.Eval .Alert.Vars.idle_total | printf "%.0f" }}</td></tr>
+    </table>
+    <br>
+    {{.Graph .Alert.Vars.idle_series_by_host_historical}}
+`
+    subject = {{.Last.Status}}: {{.Alert.Name}} : {{.Eval .Alert.Vars.idle_total | printf "%.0f"}}% cpu idle in cluster. {{.Eval .Alert.Vars.num_hosts_low}} of {{.Eval .Alert.Vars.num_hosts}} hosts have insufficient cpu idle
+}
+~~~
+
 ## Forecasting Alerts
 
 ### Forecast Disk space
@@ -286,7 +345,7 @@ template route.performance {
 At Vimeo, we use statsdaemon to track web requests/s.  Here we'll use metrics which describe the web traffic on a per server basis (we get them summed together into one series from Graphite via the sum function), and we also use a set of metrics that are already aggregated across all servers, but broken down per country.
 In the alert we leverage the banding functionality to get a similar timeframe of past weeks.  We then verify that the median of the total web traffic for this period is not significantly (20% or more) less than the median of past periods.  And on the per-country basis, we verify that the current median is not 3 or more standard deviations below the past median.  Note also that we count how many countries have issues and use that to decide wether the alert is critical or warning.
 Note that the screenshot below has been modified. The countries and values are not accurate.
-![Anomalous Route Performance Notification](public/anom_traffic_vol_graphite.png)
+![Anomalous web traffic Notification](public/anom_traffic_vol_graphite.png)
 
 #### Rule
 ~~~
