@@ -282,6 +282,103 @@ template route.performance {
 }
 ~~~
 
+### Anomalous traffic volume per country, using Graphite.
+At Vimeo, we use statsdaemon to track web requests/s.  Here we'll use metrics which describe the web traffic on a per server basis (we get them summed together into one series from Graphite via the sum function), and we also use a set of metrics that are already aggregated across all servers, but broken down per country.
+In the alert we leverage the banding functionality to get a similar timeframe of past weeks.  We then verify that the median of the total web traffic for this period is not significantly (20% or more) less than the median of past periods.  And on the per-country basis, we verify that the current median is not 3 or more standard deviations below the past median.  Note also that we count how many countries have issues and use that to decide wether the alert is critical or warning.
+Note that the screenshot below has been modified. The countries and values are not accurate.
+![Anomalous Route Performance Notification](public/anom_traffic_vol_graphite.png)
+
+#### Rule
+~~~
+alert requests_by_country {
+    template = requests_by_country
+    $r = "transformNull(sum(stats.dc1*.request.web),0)" 
+    $r_hist = graphiteBand($r, "60m","7d", "",1)
+    $r_now = graphite($r, "60m", "", "")
+    $r_hist_med = median($r_hist)
+    $r_now_med = median($r_now)
+
+    $rbc = "aliasByNode(transformNull(stats._sum_dc1.request_by_country.*,0),3)"
+    $rbc_hist = graphiteBand($rbc, "60m","7d", "country",1)
+    $rbc_now = graphite($rbc, "60m", "", "country")
+    $rbc_hist_med = median($rbc_hist)
+    $rbc_hist_dev= dev($rbc_hist)
+    $rbc_now_med = median($rbc_now)
+    $rbc_now_dev = dev($rbc_now)
+    
+    $rbc_med_diff = ($rbc_now_med - $rbc_hist_med)/$rbc_hist_dev
+    $rbc_med_bad = $rbc_med_diff < -3
+
+    $r_strength = $r_now_med/$r_hist_med
+    $rbc_med_issues = sum(t($rbc_med_bad,""))
+    warn = $rbc_med_issues > 0
+    crit = $rbc_med_issues > 10 || $r_strength < 0.8
+    warnNotification = web
+    critNotification = web
+}
+~~~
+
+#### Template
+~~~
+template requests_by_country {
+    body = `
+    <a href="{{.Ack}}">Acknowledge alert</a>
+    <br/>
+    <h2>Web requests global</h2>
+    <table>
+    <tr><td>Last week</td><td>{{.Eval .Alert.Vars.r_hist_med  | printf "%.0f"}}</td></tr>
+    {{if lt (.Eval .Alert.Vars.r_strength) 0.7}}
+        <tr style="color:red;">
+      {{else}}
+        {{if lt (.Eval .Alert.Vars.r_strength) 1.0}}
+                  <tr>
+         {{else}}
+             <tr style="color:green;">
+                   {{end}}
+    {{end}}
+   <td> Now</td><td>{{.Eval .Alert.Vars.r_now_med | printf "%.0f"}}</td></tr>
+   </table>
+    <br><a href="http://graphexplorer/index/statsd request.web sum by n1 from -1week||">GE graph</a>
+    <br>
+    <br>
+    <h2>Web requests per country</h2>
+    <br><a href="http://graphexplorer/index/request by country _sum_dc1">GE graph</a>
+    <br>median diff lower than -3 is bad
+    <br>bad values are marked in red.
+       <table style="border-spacing: 10px;">
+       <tr>
+           <th>Country</th>
+           <th>hist (med +- dev)</th>
+           <th>now (med +- dev)</th>
+           <th>med diff (in devs)</th>
+           </tr>
+    {{range $r := .LeftJoin .Alert.Vars.rbc_hist_med .Alert.Vars.rbc_hist_dev .Alert.Vars.rbc_now_med .Alert.Vars.rbc_now_dev .Alert.Vars.rbc_med_diff .Alert.Vars.rbc_med_bad}}
+        <tr>
+            <td>{{(index $r 0).Group.country}}</td>
+            <td> {{ (index $r 0).Value | printf "%.0f"}} +- {{ (index $r 1).Value | printf "%.0f"}}</td>
+            <td> {{ (index $r 2).Value | printf "%.0f"}} +- {{ (index $r 3).Value | printf "%.0f"}}</td>
+            {{ if gt (index $r 5).Value 0.0}}
+                <td style="color:red;" >{{ (index $r 4).Value | printf "%.0f"}}</td>
+            {{else}}
+                  <td style="color:green;"> {{ (index $r 4).Value | printf "%.0f"}}</td>
+             {{end}}
+            <td><a href="http://graphexplorer/index/request by country _sum_dc1 n3={{(index $r 0).Group.country}}||">GE graph</a></td>
+        </tr>
+    {{end}}
+    </table>
+    `
+    subject =`
+    {{.Last.Status}}: {{.Alert.Name}} :
+ Global traffic volume {{.Eval .Alert.Vars.r_strength | printf "%.3f"}}
+ | {{.Eval .Alert.Vars.rbc_med_issues | printf "%.0f"}} Countries with dropped median:
+        {{range $r :=.EvalAll .Alert.Vars.rbc_med_bad}}
+        {{ if gt $r.Value 0.0}}
+             {{$r.Group.country}}
+         {{end}}
+    {{end}}`
+}
+~~~
+
 
 ## Alerts with Notification Breakdowns
 A common pattern is to trigger an alert on a scope that covers multiple metrics
