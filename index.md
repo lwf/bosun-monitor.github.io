@@ -45,9 +45,10 @@ order: 1
 </div>
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
-		<h2>Support</h2>
+		<h2>Support &amp; Development</h2>
 		<p>We have a chat room at Stack Exchange for Bosun support: <a href="http://chat.stackoverflow.com/rooms/67157/bosun">http://chat.stackoverflow.com/rooms/67157/bosun</a>.</p>
 		<p>Or you can open <a href="https://github.com/bosun-monitor/bosun/issues">an issue on GitHub</a>.</p>
+		<p>We encourage and foster collaboration.  We are depending on the creativity and experience of our users to influence its design.  Let's make Bosun better, together!</p>
 	</div>
 </div>
 <div class="row">
@@ -69,8 +70,12 @@ order: 1
 </div>
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
-		<h2>Alpha</h2>
-		<p>Bosun is in alpha. It has bugs and its functionality will change. We will maintain an errata page detailing breaking changes going forward. Be aware of these problems if you plan to use it for production work.</p>
-		<p>However, Bosun is already useful to us, and we are relying on it more and more at Stack Exchange. We want Bosun to be a general monitoring solution, and therefore we are depending on the creativity and experience of our users to influence its design. This means we will make changes that may break existing configuration.</p>
+		<h2>Status</h2>
+		<p>Bosun is in active development.  Functionality is constantly being improved.</p>
+        <p>Bosun is used for production monitoring at:
+            <br/>
+            <img src="/public/stackexchange-logo.png" width="200px">
+            <img src="/public/vimeo-logo.png" width="130px">
+        </p>
 	</div>
 </div>
