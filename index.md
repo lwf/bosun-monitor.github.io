@@ -18,16 +18,20 @@ order: 1
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Features</h3></div>
 			<div class="panel-body">
+				<h4>General</h4>
 				<ul>
 					<li>An expression language for evaluating time series data. You can now create highly flexible alerts and control noise</li>
 					<li>Templates for notifications that allow making alerts as detailed and informative as needed</li>
 					<li>An interface for testing alerts and templates to see if alerts would have triggered over a range of history before deploying the changes</li>
-					<li>High resolution metrics that never need to be rolled up that are stored in <a href="http://opentsdb.net/">OpenTSDB</a></li>
-					<li>Is bundled with a metric collector called <a href="http://bosun.org/scollector/">scollector</a> that treats both Linux and Windows as first-class systems and can also poll SNMP devices such as Cisco; running this collector provides you with a rich library of metrics from day 1</li>
-					<li>Runs on any operating system which supports <a href="http://golang.org/">Go</a> (Windows and Linux supported)</li>
+					<li>First-class tags support.  Supports arbitrary dimensions (not just host based), aggregations and automatically incorporating new tags (hosts, services, ..) as they appear.</li>
+					<li>Supports querying <a href="http://opentsdb.net/">OpenTSDB</a>, <a href="http://graphite.readthedocs.or">Graphite</a> and <a href="http://www.elasticsearch.org/overview/logstash/">Logstash-Elasticsearch</a>.  More to come.</li>
+					<li>Runs on any operating system that <a href="http://golang.org/">Go</a> supports, such as Linux or Windows</li>
+				</ul>
+				<h4>OpenTSDB specific</h4>
+				<ul>
+					<li>Suports taking in arbitrary application or business metrics via a simple JSON API and proxying into OpenTSDB</li>
+					<li>Is bundled with <a href="http://bosun.org/scollector/">scollector</a>, a metrics collector that treats both Linux and Windows as first-class systems and can also poll SNMP devices such as Cisco; running this collector provides you with a rich library of metrics from day 1</li>
 					<li>Auto-detects new services and starts sending metrics immediately; properly designed alerts will also apply to these new services and allow for minimal maintenance on the side of the operator</li>
-					<li>Easily ingests metrics from services with a simple JSON API so you can easily get application-layer and business metrics into the system</li>
-					<li>Aggregation support so your monitoring need not be purely host-based (and you don't need to worry about aggregating metrics from multiple servers yourself)</li>
 				</ul>
 			</div>
 		</div>

@@ -10,7 +10,7 @@ redirect_from: /gettingstarted.html
 
 {% raw %}
 
-This document is written as a Quick-Start to getting Bosun working in your environment. By following this tutorial, you should have a fully operational Bosun system which not only is aggregating collected metrics from selected machines but also alerting you on relevant data about those systems.
+This document is written as a Quick-Start to getting Bosun working in your environment. By following this tutorial, you should have a fully operational Bosun system which not only is aggregating collected metrics from selected machines but also alerting you on relevant data about those systems.  We will be using OpenTSDB.  For some Graphite pointers, see the [graphite](#graphite) section below.
 
 # Bosun
 
@@ -144,5 +144,46 @@ You may instead create a `scollector.conf` file alongside the scollector binary 
 	host=docker-server-ip:8070
 
 See the [scollector docs](http://godoc.org/bosun.org/cmd/scollector) for more information.
+
+# graphite
+
+Next to OpenTSDB, Bosun also supports querying Graphite and Logstash-Elasticsearch.
+You can execute, view and graph expressions, develop and run Graphite/LS alerting rules, get notifications and use the dashboard.
+The OpenTSDB specific feature, such as data proxying and the built in general purpose graphing interface don't apply here.
+The alerting rules look the same, in fact the only difference is you will query data using [graphite specific functions](http://bosun.org/configuration.html#graphite-query-functions) such as graphiteQuery and graphiteBand.
+
+Start Graphite in docker:
+
+    $ docker run -d \
+      --name graphite \
+      -p 80:80 \
+      -p 2003:2003 \
+      -p 8125:8125/udp \
+      hopsoft/graphite-statsd
+
+[Collectd](http://collectd.org/) is commonly used to submit metrics into Graphite. (scollector does not support Graphite).
+You can easily launch it like so:
+
+    $ docker run -e HOST_NAME=localhost -e GRAPHITE_HOST=<your host eth0 ip> andreasjansson/collectd-write-graphite
+
+verify that http://localhost loads with the graphite interface, go into Graphite> localhost> cpu, go into the hierarchy and toggle on some of the metrics. it might take a minute or two before data starts showing up.
+
+In your config, set
+
+    graphiteHost = http://localhost
+
+Now you can run alerting rules like so:
+
+    alert os.high.cpu {
+        template = generic
+        $d = graphite("*.cpu.*.cpu.idle)", "5m", "", "host..core..type")
+        $q = avg($d)
+        # purposely very harsh tresholds so we definitely get some alerts
+        warn = $q < 100
+        crit = $q <= 97
+    }
+
+the 4th argument of the graphite function is the format of how to parse the series that graphite will return. in this case the first field is the host, the 3rd the core, and the last the cpu usage type, so these fields will be turned into tags within bosun.
+
 
 {% endraw %}

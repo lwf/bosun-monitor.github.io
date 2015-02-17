@@ -457,6 +457,10 @@ Returns the value from the series at the percentile p. Min and Max can be simula
 
 Returns the number of seconds since the latest data point not more than duration old.
 
+#### streak(series)
+
+Returns the length of the longest streak of values that evaluate to true (i.e. max amount of contiguous non-zero values found).
+
 #### sum(series)
 
 Sum.
