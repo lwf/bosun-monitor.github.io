@@ -50,8 +50,8 @@ order: 1
 <div class="row">
 	<div class="col-md-offset-1 col-md-10">
 		<h2>Support &amp; Development</h2>
-		<p>We have a chat room at Stack Exchange for Bosun support: <a href="http://chat.stackoverflow.com/rooms/67157/bosun">http://chat.stackoverflow.com/rooms/67157/bosun</a>.</p>
-		<p>Or you can open <a href="https://github.com/bosun-monitor/bosun/issues">an issue on GitHub</a>.</p>
+		<p>We have a slack chat room: <a href="https://bosun.slack.com">https://bosun.slack.com</a>. Unfortunately it's invitation only but tweet at <a href="https://twitter.com/Dieter_be">Dieter_be</a> and/or <a href="https://twitter.com/kylembrandt">kylembrandt</a> to get an invite, or email us or open a ticket.
+		<p>You can open <a href="https://github.com/bosun-monitor/bosun/issues">issues on GitHub</a> to report bugs or discuss new features.</p>
 		<p>We encourage and foster collaboration.  We are depending on the creativity and experience of our users to influence its design.  Let's make Bosun better, together!</p>
 	</div>
 </div>
