@@ -34,7 +34,7 @@ The above command tells the Docker daemon that you would like to start a new dae
 
 ## Getting data into Bosun
 
-The Bosun docker image self populates a fair amout of data. See the [scollector](#scollector) section below if you'd like to know more, but you can skip it for now.
+The Bosun docker image self populates a fair amount of data. See the [scollector](#scollector) section below if you'd like to know more, but you can skip it for now.
 
 ## Checking for data in Bosun
 
