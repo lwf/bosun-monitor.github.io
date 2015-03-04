@@ -558,6 +558,11 @@ Returns the first key from the given lookup table with matching tags.
 
 Change the NaN value during binary operations (when joining two queries) of unknown groups to the scalar. This is useful to prevent unknown group and other errors from bubbling up.
 
+#### des(series, alpha, beta)
+
+Returns input series with [Double exponential smoothing](http://en.wikipedia.org/wiki/Exponential_smoothing#Double_exponential_smoothing) applied. alpha is the data smoothing factor
+and beta is the trend smoothing factor; values closer to 1 provide more significance to recent values and values closer to 0 give more significance to past values.
+
 ## Operators
 
 The standard math (`+`, `-`, `*`, `/`), relational (`<`, `>`, `==`, `!=`, `>=`, `<=`), logical (`&&`, `||`), and unary(`!`, `-`) operators are supported. The binary operators require one side to be a scalar. Arrays will have the operator applied to each element. Examples:
